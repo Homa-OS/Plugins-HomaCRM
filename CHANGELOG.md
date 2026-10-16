@@ -1,0 +1,9 @@
+# تغییرات — HomaCRM برای وردپرس
+
+## 1.0.0 — ۱۴۰۵/۰۷/۲۴ (2026-10-16)
+- نسخهٔ نخست؛ جایگزینِ افزونهٔ پیامکِ ووکامرس (درگاهِ Homais.com) و Digits.
+- اتصال فقط با توکنِ API هما (`https://homacrm.com/api/v1/external`).
+- ورود و ثبت‌نام با پیامک: wp-login، ووکامرس، `[homacrm_login]`؛ کوچِ خودکارِ کاربرانِ Digits و ووکامرس.
+- پیامکِ وضعیتِ سفارش و سفارشِ تازه برای مدیران؛ سازگار با HPOS.
+- مخاطب و معامله در CRMِ هما؛ فرمِ `[homacrm_form]` و Contact Form 7 ⇒ سرنخ/تیکت.
+- REST (`/wp-json/homacrm/v1/status|sms|lead`) و Abilities APIِ وردپرس (پایهٔ MCP).

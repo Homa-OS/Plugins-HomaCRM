@@ -1,0 +1,13 @@
+.homacrm-otp,.homacrm-form{box-sizing:border-box;max-width:380px;margin:16px 0;padding:16px;border:1px solid #e2e5e9;border-radius:10px;background:#fff;font-family:inherit}
+.homacrm-otp *,.homacrm-form *{box-sizing:border-box}
+.homacrm-otp-title{margin:0 0 10px;font-weight:600}
+.homacrm-step{display:flex;gap:8px;flex-wrap:wrap}
+.homacrm-otp input,.homacrm-form input,.homacrm-form textarea{width:100%;padding:8px 10px;border:1px solid #c3c4c7;border-radius:6px;font-size:15px;margin:0 0 8px}
+.homacrm-step input{flex:1;min-width:150px;margin:0}
+.homacrm-code{letter-spacing:.4em;text-align:center}
+.homacrm-msg{min-height:1.2em;margin:8px 0 0;font-size:13px}
+.homacrm-ok{color:#1f8a6e}.homacrm-bad{color:#c0392b}
+.homacrm-brand{margin:8px 0 0;font-size:11px;color:#8c8f94}
+.homacrm-hp{position:absolute!important;left:-9999px!important;width:1px!important;height:1px!important;opacity:0}
+.homacrm-resend{margin-inline-start:auto;font-size:12px}
+#loginform .homacrm-otp{margin:0 0 16px;border:0;padding:0;border-bottom:1px solid #dcdcde;padding-bottom:16px}

@@ -1,16 +1,21 @@
-.homacrm-otp,.homacrm-form{box-sizing:border-box;max-width:380px;margin:16px 0;padding:16px;border:1px solid #e2e5e9;border-radius:10px;background:#fff;font-family:inherit}
+.homacrm-otp,.homacrm-form{--hc-accent:var(--theme-palette-color-1,#1f8a6e);box-sizing:border-box;max-width:420px;margin:16px auto;padding:20px;border:1px solid #e4e6ea;border-radius:14px;background:#fff;font-family:inherit;box-shadow:0 4px 18px rgba(15,23,42,.05)}
 .homacrm-otp *,.homacrm-form *{box-sizing:border-box}
-.homacrm-otp-title{margin:0 0 10px;font-weight:600}
-.homacrm-step{display:flex;gap:8px;flex-wrap:wrap}
+.homacrm-otp-title{margin:0 0 14px;font-weight:800;font-size:16px;text-align:center}
+.homacrm-step{display:flex;flex-direction:column;gap:10px}
 .homacrm-step[hidden]{display:none!important}
-.homacrm-otp input,.homacrm-form input,.homacrm-form textarea{width:100%;padding:8px 10px;border:1px solid #c3c4c7;border-radius:6px;font-size:15px;margin:0 0 8px}
-.homacrm-step input{flex:1;min-width:150px;margin:0}
-.homacrm-code{letter-spacing:.4em;text-align:center}
-.homacrm-msg{min-height:1.2em;margin:8px 0 0;font-size:13px}
+.homacrm-otp input,.homacrm-form input,.homacrm-form textarea{width:100%;padding:12px 14px;border:1px solid #d5d8dd;border-radius:10px;font-size:16px;margin:0 0 8px;background:#fff;transition:border-color .15s,box-shadow .15s}
+.homacrm-otp input:focus,.homacrm-form input:focus,.homacrm-form textarea:focus{outline:0;border-color:var(--hc-accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--hc-accent) 18%,transparent)}
+.homacrm-step input{margin:0;text-align:center;letter-spacing:.06em;font-size:18px;height:50px}
+.homacrm-code{letter-spacing:.5em!important;font-size:22px!important;font-weight:800}
+.homacrm-otp .button.homacrm-send,.homacrm-otp .button.homacrm-verify,.homacrm-form button[type=submit]{width:100%;height:48px;border:0;border-radius:10px!important;background:var(--hc-accent)!important;color:#fff!important;font-weight:800;font-size:15px;cursor:pointer;margin:0}
+.homacrm-otp .button:disabled{opacity:.55;cursor:not-allowed}
+.homacrm-row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.homacrm-otp .button-link{background:none;border:0;padding:4px 0;color:var(--hc-accent);font-size:13px;font-weight:600;cursor:pointer}
+.homacrm-otp .button-link:disabled{color:#8c8f94;cursor:default}
+.homacrm-msg{min-height:1.4em;margin:10px 0 0;font-size:13px;text-align:center;line-height:1.9}
 .homacrm-ok{color:#1f8a6e}.homacrm-bad{color:#c0392b}
-.homacrm-brand{margin:8px 0 0;font-size:12px;color:#8c8f94}
-.homacrm-brand a{color:#1f8a6e;font-weight:700;text-decoration:none}
+.homacrm-brand{margin:10px 0 0;font-size:11.5px;color:#8c8f94;text-align:center}
+.homacrm-brand a{color:var(--hc-accent);font-weight:700;text-decoration:none}
 .homacrm-hp{position:absolute!important;left:-9999px!important;width:1px!important;height:1px!important;opacity:0}
-.homacrm-resend{margin-inline-start:auto;font-size:12px}
-#loginform .homacrm-otp{margin:16px 0;border:0;border-top:1px solid #dcdcde;border-radius:0;padding:16px 0 0}
-#loginform .homacrm-otp .button{margin:0}
+.homacrm-gate form.checkout,.homacrm-gate .woocommerce-form-login-toggle,.homacrm-gate .woocommerce-form-coupon-toggle,.homacrm-gate .wc-block-checkout{display:none!important}
+#loginform .homacrm-otp{margin:16px 0;border:0;border-top:1px solid #dcdcde;border-radius:0;padding:16px 0 0;box-shadow:none}

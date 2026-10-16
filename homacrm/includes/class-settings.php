@@ -28,6 +28,7 @@ final class Settings {
 			'otp_register'        => 1,
 			'otp_on_wp_login'     => 1,
 			'otp_on_woo'          => 1,
+			'otp_checkout_gate'   => 1,
 			// ووکامرس
 			'woo_enabled'         => 0,
 			'woo_statuses'        => array( 'processing', 'completed' ),
@@ -173,6 +174,7 @@ final class Settings {
 		self::checkbox( 'otp_enabled', $s, __( 'ورود و ثبت‌نام با پیامک روشن باشد', 'homacrm' ) );
 		self::checkbox( 'otp_on_wp_login', $s, __( 'در صفحهٔ ورودِ وردپرس (wp-login.php) هم نشان داده شود', 'homacrm' ) );
 		self::checkbox( 'otp_on_woo', $s, __( 'در «حسابِ کاربری» و تسویه‌حسابِ ووکامرس هم نشان داده شود', 'homacrm' ) );
+		self::checkbox( 'otp_checkout_gate', $s, __( 'در تسویه‌حساب، فرمِ صورت‌حساب فقط بعد از ورود با پیامک دیده شود', 'homacrm' ) );
 		self::checkbox( 'otp_register', $s, __( 'اگر کاربری با این موبایل نبود، خودکار ثبت‌نام شود', 'homacrm' ) );
 		self::row( __( 'طولِ کد', 'homacrm' ), '<input type="number" min="4" max="8" name="otp_length" value="' . esc_attr( $s['otp_length'] ) . '">' );
 		self::row( __( 'اعتبارِ کد (ثانیه)', 'homacrm' ), '<input type="number" min="60" max="600" name="otp_ttl" value="' . esc_attr( $s['otp_ttl'] ) . '">' );
@@ -262,7 +264,7 @@ final class Settings {
 		$s   = self::all();
 		$tab = sanitize_key( $in['tab'] ?? '' );
 		$checkboxes = array(
-			'login' => array( 'otp_enabled', 'otp_on_wp_login', 'otp_on_woo', 'otp_register' ),
+			'login' => array( 'otp_enabled', 'otp_on_wp_login', 'otp_on_woo', 'otp_register', 'otp_checkout_gate' ),
 			'woo'   => array( 'woo_enabled', 'woo_sync_contact', 'shop_sync', 'shop_invoice' ),
 			'crm'   => array( 'crm_sync_users', 'forms_enabled' ),
 			'about' => array( 'auto_update', 'notify_email', 'notify_sms' ),

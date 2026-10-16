@@ -30,6 +30,7 @@ final class Login {
 		if ( Settings::get( 'otp_on_woo' ) ) {
 			add_action( 'woocommerce_login_form_end', array( __CLASS__, 'echo_form' ) );
 			add_action( 'woocommerce_before_checkout_form', array( __CLASS__, 'checkout_form' ), 5 );
+			add_filter( 'body_class', array( __CLASS__, 'checkout_gate_class' ) );
 		}
 		add_action( 'show_user_profile', array( __CLASS__, 'profile_field' ) );
 		add_action( 'edit_user_profile', array( __CLASS__, 'profile_field' ) );
@@ -52,7 +53,12 @@ final class Login {
 					'sending'  => __( 'در حال ارسال…', 'homacrm' ),
 					'checking' => __( 'در حال بررسی…', 'homacrm' ),
 					'resend'   => __( 'ارسالِ دوباره', 'homacrm' ),
+					'send'     => __( 'دریافتِ کد', 'homacrm' ),
 					'wait'     => __( 'ارسالِ دوباره تا %s ثانیهٔ دیگر', 'homacrm' ),
+					'waitMsg'  => __( '%s ثانیهٔ دیگر دوباره امتحان کنید.', 'homacrm' ),
+					'sentTo'   => __( 'کد به %s فرستاده شد.', 'homacrm' ),
+					'edit'     => __( 'ویرایشِ شماره', 'homacrm' ),
+					'badMobile'=> __( 'شمارهٔ موبایل را کامل وارد کنید (۱۱ رقم، با ۰۹).', 'homacrm' ),
 					'error'    => __( 'مشکلی پیش آمد؛ دوباره امتحان کنید.', 'homacrm' ),
 				),
 			)
@@ -73,10 +79,19 @@ final class Login {
 		echo self::form_html( isset( $_REQUEST['redirect_to'] ) ? esc_url_raw( wp_unslash( $_REQUEST['redirect_to'] ) ) : '' ); // phpcs:ignore WordPress.Security
 	}
 
+	/** صفحهٔ پرداخت: مهمان اول با پیامک وارد می‌شود، بعد فرمِ صورت‌حساب دیده می‌شود. */
 	public static function checkout_form() {
 		if ( ! is_user_logged_in() ) {
-			self::echo_form();
+			self::enqueue();
+			echo self::form_html( function_exists( 'wc_get_checkout_url' ) ? wc_get_checkout_url() : '' ); // phpcs:ignore WordPress.Security.EscapeOutput
 		}
+	}
+
+	public static function checkout_gate_class( $c ) {
+		if ( ! is_user_logged_in() && function_exists( 'is_checkout' ) && is_checkout() && ! is_wc_endpoint_url() && Settings::get( 'otp_checkout_gate' ) ) {
+			$c[] = 'homacrm-gate';
+		}
+		return $c;
 	}
 
 	private static function form_html( $redirect ) {
@@ -86,13 +101,13 @@ final class Login {
 		<div class="homacrm-otp" dir="rtl" data-redirect="<?php echo esc_attr( $redirect ); ?>">
 			<p class="homacrm-otp-title"><?php esc_html_e( 'ورود یا ثبت‌نام با شمارهٔ موبایل', 'homacrm' ); ?></p>
 			<div class="homacrm-step homacrm-step-mobile">
-				<input type="tel" inputmode="numeric" autocomplete="tel" class="homacrm-mobile" placeholder="09xxxxxxxxx" dir="ltr" aria-label="<?php esc_attr_e( 'شمارهٔ موبایل', 'homacrm' ); ?>">
+				<input type="tel" inputmode="numeric" autocomplete="tel" class="homacrm-mobile" placeholder="۰۹۱۲۳۴۵۶۷۸۹" dir="ltr" maxlength="16" aria-label="<?php esc_attr_e( 'شمارهٔ موبایل', 'homacrm' ); ?>">
 				<button type="button" class="button homacrm-send"><?php esc_html_e( 'دریافتِ کد', 'homacrm' ); ?></button>
 			</div>
 			<div class="homacrm-step homacrm-step-code" hidden>
 				<input type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="<?php echo esc_attr( $len ); ?>" class="homacrm-code" placeholder="<?php echo esc_attr( str_repeat( '•', $len ) ); ?>" dir="ltr" aria-label="<?php esc_attr_e( 'کدِ پیامک‌شده', 'homacrm' ); ?>">
-				<button type="button" class="button button-primary homacrm-verify"><?php esc_html_e( 'ورود', 'homacrm' ); ?></button>
-				<button type="button" class="button-link homacrm-resend" disabled></button>
+				<button type="button" class="button button-primary homacrm-verify"><?php esc_html_e( 'تأیید و ورود', 'homacrm' ); ?></button>
+				<div class="homacrm-row"><button type="button" class="button-link homacrm-edit"><?php esc_html_e( 'ویرایشِ شماره', 'homacrm' ); ?></button><button type="button" class="button-link homacrm-resend" disabled></button></div>
 			</div>
 			<p class="homacrm-msg" role="status" aria-live="polite"></p>
 			<p class="homacrm-brand"><?php esc_html_e( 'ورود امن با پیامکِ', 'homacrm' ); ?> <a href="https://homacrm.com/?utm_source=wp-plugin&amp;utm_medium=login" target="_blank" rel="noopener">HomaCRM.com</a></p>
@@ -112,28 +127,31 @@ final class Login {
 		if ( ! Settings::get( 'otp_register' ) && ! self::find_user( $mobile ) ) {
 			wp_send_json_error( array( 'message' => __( 'کاربری با این شماره پیدا نشد.', 'homacrm' ) ), 404 );
 		}
-		$ip = self::ip();
-		if ( ! self::throttle( 'ip_' . md5( $ip ), 15, HOUR_IN_SECONDS ) || ! self::throttle( 'm_' . $mobile, 5, HOUR_IN_SECONDS ) ) {
-			wp_send_json_error( array( 'message' => __( 'درخواست‌ها زیاد بود؛ کمی بعد دوباره امتحان کنید.', 'homacrm' ) ), 429 );
+		$ip   = self::ip();
+		$wait = max( self::limited( 'ip_' . md5( $ip ), 15 ), self::limited( 'm_' . $mobile, 5 ) );
+		if ( $wait > 0 ) {
+			wp_send_json_error( array( 'message' => __( 'تعدادِ درخواست‌ها زیاد بود.', 'homacrm' ), 'wait' => $wait ), 429 );
 		}
-		$last = get_transient( 'homacrm_otp_last_' . $mobile );
-		if ( $last && time() - (int) $last < 60 ) {
-			wp_send_json_error( array( 'message' => __( 'کد همین الان فرستاده شد؛ کمی صبر کنید.', 'homacrm' ), 'wait' => 60 - ( time() - (int) $last ) ), 429 );
+		$last = (int) get_transient( 'homacrm_otp_last_' . $mobile );
+		if ( $last && time() - $last < 60 ) {
+			wp_send_json_error( array( 'message' => __( 'کد همین الان فرستاده شد.', 'homacrm' ), 'wait' => 60 - ( time() - $last ), 'sent' => 1 ), 429 );
 		}
 		$len  = max( 4, min( 8, (int) Settings::get( 'otp_length' ) ) );
 		$code = '';
 		for ( $i = 0; $i < $len; $i++ ) {
 			$code .= (string) random_int( 0, 9 );
 		}
-		$ttl = max( 60, min( 600, (int) Settings::get( 'otp_ttl' ) ) );
-		set_transient( 'homacrm_otp_' . $mobile, array( 'h' => self::hash( $mobile, $code ), 'tries' => 0 ), $ttl );
-		set_transient( 'homacrm_otp_last_' . $mobile, time(), 60 );
+		$ttl  = max( 60, min( 600, (int) Settings::get( 'otp_ttl' ) ) );
 		$text = Util::render( Settings::get( 'otp_template' ), array( 'code' => $code, 'site' => get_bloginfo( 'name' ) ) );
 		$res  = Sms::send( $mobile, $text, 'otp' );
 		if ( ! $res['ok'] ) {
-			delete_transient( 'homacrm_otp_' . $mobile );
-			wp_send_json_error( array( 'message' => __( 'ارسالِ پیامک ممکن نشد؛ کمی بعد دوباره امتحان کنید.', 'homacrm' ) ), 502 );
+			// ارسالِ ناموفق شمرده نمی‌شود و مهلتِ انتظار نمی‌سازد.
+			wp_send_json_error( array( 'message' => __( 'ارسالِ پیامک ممکن نشد؛ چند لحظهٔ دیگر دوباره بزنید.', 'homacrm' ) ), 502 );
 		}
+		set_transient( 'homacrm_otp_' . $mobile, array( 'h' => self::hash( $mobile, $code ), 'tries' => 0 ), $ttl );
+		set_transient( 'homacrm_otp_last_' . $mobile, time(), 60 );
+		self::hit( 'ip_' . md5( $ip ) );
+		self::hit( 'm_' . $mobile );
 		wp_send_json_success( array( 'message' => __( 'کد فرستاده شد.', 'homacrm' ), 'wait' => 60 ) );
 	}
 
@@ -142,7 +160,7 @@ final class Login {
 	public static function ajax_verify() {
 		self::guard();
 		$mobile = Util::mobile( wp_unslash( $_POST['mobile'] ?? '' ) );
-		$code   = preg_replace( '/\D+/', '', strtr( (string) wp_unslash( $_POST['code'] ?? '' ), array( '۰' => '0', '۱' => '1', '۲' => '2', '۳' => '3', '۴' => '4', '۵' => '5', '۶' => '6', '۷' => '7', '۸' => '8', '۹' => '9' ) ) );
+		$code   = preg_replace( '/\D+/', '', strtr( (string) wp_unslash( $_POST['code'] ?? '' ), array( '۰' => '0', '۱' => '1', '۲' => '2', '۳' => '3', '۴' => '4', '۵' => '5', '۶' => '6', '۷' => '7', '۸' => '8', '۹' => '9', '٠' => '0', '١' => '1', '٢' => '2', '٣' => '3', '٤' => '4', '٥' => '5', '٦' => '6', '٧' => '7', '٨' => '8', '٩' => '9' ) ) );
 		$key    = 'homacrm_otp_' . $mobile;
 		$rec    = get_transient( $key );
 		if ( '' === $mobile || ! is_array( $rec ) ) {
@@ -256,14 +274,23 @@ final class Login {
 		return hash_hmac( 'sha256', $mobile . '|' . $code, wp_salt( 'auth' ) );
 	}
 
-	private static function throttle( $key, $max, $window ) {
-		$k = 'homacrm_rl_' . $key;
-		$n = (int) get_transient( $k );
-		if ( $n >= $max ) {
-			return false;
+	/** اگر سقفِ یک‌ساعته پر شده، چند ثانیه تا آزادشدن مانده؛ وگرنه ۰. */
+	private static function limited( $key, $max ) {
+		$r = get_transient( 'homacrm_rl_' . $key );
+		if ( ! is_array( $r ) || (int) $r['n'] < $max ) {
+			return 0;
 		}
-		set_transient( $k, $n + 1, $window );
-		return true;
+		return max( 1, (int) $r['until'] - time() );
+	}
+
+	private static function hit( $key ) {
+		$k = 'homacrm_rl_' . $key;
+		$r = get_transient( $k );
+		if ( ! is_array( $r ) ) {
+			$r = array( 'n' => 0, 'until' => time() + HOUR_IN_SECONDS );
+		}
+		++$r['n'];
+		set_transient( $k, $r, max( 1, (int) $r['until'] - time() ) );
 	}
 
 	private static function ip() {

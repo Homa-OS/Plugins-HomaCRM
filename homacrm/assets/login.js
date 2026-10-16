@@ -5,7 +5,9 @@
   function post(action, data) {
     var body = new URLSearchParams(Object.assign({ action: action, nonce: cfg.nonce }, data));
     return fetch(cfg.ajax, { method: 'POST', credentials: 'same-origin', body: body })
-      .then(function (r) { return r.json().catch(function () { return { success: false, data: {} }; }); });
+      .then(function (r) { return r.json().catch(function () { return { success: false, data: {} }; }); })
+      .catch(function () { return { success: false, data: {} }; })
+      .then(function (r) { if (!r.success && !(r.data && r.data.message)) { r.data = { message: cfg.i18n.error }; } return r; });
   }
   function init(box) {
     var $ = function (s) { return box.querySelector(s); };

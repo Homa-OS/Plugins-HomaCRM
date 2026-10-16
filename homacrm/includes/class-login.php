@@ -53,6 +53,7 @@ final class Login {
 					'checking' => __( 'در حال بررسی…', 'homacrm' ),
 					'resend'   => __( 'ارسالِ دوباره', 'homacrm' ),
 					'wait'     => __( 'ارسالِ دوباره تا %s ثانیهٔ دیگر', 'homacrm' ),
+					'error'    => __( 'مشکلی پیش آمد؛ دوباره امتحان کنید.', 'homacrm' ),
 				),
 			)
 		);
@@ -103,7 +104,7 @@ final class Login {
 	/* ---------- درخواستِ کد ---------- */
 
 	public static function ajax_request() {
-		check_ajax_referer( 'homacrm_otp', 'nonce' );
+		self::guard();
 		$mobile = Util::mobile( wp_unslash( $_POST['mobile'] ?? '' ) );
 		if ( '' === $mobile ) {
 			wp_send_json_error( array( 'message' => __( 'شمارهٔ موبایل درست نیست.', 'homacrm' ) ), 400 );
@@ -139,7 +140,7 @@ final class Login {
 	/* ---------- تأییدِ کد و ورود ---------- */
 
 	public static function ajax_verify() {
-		check_ajax_referer( 'homacrm_otp', 'nonce' );
+		self::guard();
 		$mobile = Util::mobile( wp_unslash( $_POST['mobile'] ?? '' ) );
 		$code   = preg_replace( '/\D+/', '', strtr( (string) wp_unslash( $_POST['code'] ?? '' ), array( '۰' => '0', '۱' => '1', '۲' => '2', '۳' => '3', '۴' => '4', '۵' => '5', '۶' => '6', '۷' => '7', '۸' => '8', '۹' => '9' ) ) );
 		$key    = 'homacrm_otp_' . $mobile;
@@ -240,6 +241,16 @@ final class Login {
 	}
 
 	/* ---------- کمکی ---------- */
+
+	/**
+	 * nonce فقط برای کاربرِ واردشده سنجیده می‌شود. برای مهمان نه، چون صفحه‌های کش‌شده nonceِ کهنه دارند
+	 * و فرمِ ورود را بی‌صدا از کار می‌انداخت؛ محافظِ مهمان همان محدودیتِ تکرار (IP و موبایل) است.
+	 */
+	private static function guard() {
+		if ( is_user_logged_in() && ! check_ajax_referer( 'homacrm_otp', 'nonce', false ) ) {
+			wp_send_json_error( array( 'message' => __( 'صفحه کهنه شده است؛ یک بار تازه کنید.', 'homacrm' ) ), 403 );
+		}
+	}
 
 	private static function hash( $mobile, $code ) {
 		return hash_hmac( 'sha256', $mobile . '|' . $code, wp_salt( 'auth' ) );

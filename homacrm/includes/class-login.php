@@ -50,8 +50,9 @@ final class Login {
 				'ajax'  => admin_url( 'admin-ajax.php' ),
 				'nonce' => wp_create_nonce( 'homacrm_otp' ),
 				'i18n'  => array(
-					'sending'  => __( 'در حال ارسال…', 'homacrm' ),
-					'checking' => __( 'در حال بررسی…', 'homacrm' ),
+					'sending'  => __( 'در حال ارسالِ کد…', 'homacrm' ),
+					'checking' => __( 'در حال بررسیِ کد…', 'homacrm' ),
+					'entering' => __( 'در حال ورود…', 'homacrm' ),
 					'resend'   => __( 'ارسالِ دوباره', 'homacrm' ),
 					'send'     => __( 'دریافتِ کد', 'homacrm' ),
 					'wait'     => __( 'ارسالِ دوباره تا %s ثانیهٔ دیگر', 'homacrm' ),

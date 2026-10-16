@@ -48,15 +48,25 @@
         paint();
       }, 1000);
     }
+    /** حالتِ «در حال کار»: دکمه چرخنده و متن می‌گیرد، فرم کم‌رنگ و قفل و نوارِ پیشرفت بالای کادر. */
+    function loading(btn, on, text) {
+      box.classList.toggle('homacrm-busy', on);
+      [mobile, code].forEach(function (i) { i.readOnly = on; });
+      if (!btn) return;
+      if (on) { btn.dataset.label = btn.textContent; btn.disabled = true; btn.classList.add('is-loading'); btn.innerHTML = '<span class="homacrm-spin" aria-hidden="true"></span>' + text; }
+      else if (btn.dataset.label != null) { btn.classList.remove('is-loading'); btn.disabled = false; btn.textContent = btn.dataset.label; delete btn.dataset.label; }
+    }
     function showCode(m) { stepM.hidden = true; stepC.hidden = false; say(cfg.i18n.sentTo.replace('%s', fa(m)), true); code.value = ''; code.focus(); }
     function request() {
       if (busy) return;
       var m = normMobile(mobile.value);
       mobile.value = m;
       if (!/^09\d{9}$/.test(m)) { say(cfg.i18n.badMobile, false); mobile.focus(); return; }
-      busy = true; say(cfg.i18n.sending, true);
+      busy = true; say('', true);
+      var btn = stepM.hidden ? resend : send;
+      loading(btn, true, cfg.i18n.sending);
       post('homacrm_otp_request', { mobile: m }).then(function (r) {
-        busy = false;
+        busy = false; loading(btn, false);
         var d = r.data || {};
         if (r.success || d.sent) { showCode(m); if (d.sent) { base = d.message; } }
         else { say(d.message, false); }
@@ -67,11 +77,14 @@
       var c = digits(code.value);
       code.value = c;
       if (busy || c.length < 4) return;
-      busy = true; say(cfg.i18n.checking, true);
+      busy = true; say('', true);
+      var vb = $('.homacrm-verify');
+      loading(vb, true, cfg.i18n.checking);
       post('homacrm_otp_verify', { mobile: normMobile(mobile.value), code: c, redirect: box.getAttribute('data-redirect') || '' }).then(function (r) {
         busy = false;
         var d = r.data || {};
-        if (r.success) { if (d.redirect) { window.location.href = d.redirect; } else { window.location.reload(); } return; }
+        if (r.success) { loading(vb, true, cfg.i18n.entering); if (d.redirect) { window.location.href = d.redirect; } else { window.location.reload(); } return; }
+        loading(vb, false);
         say(d.message, false); code.select();
       });
     }

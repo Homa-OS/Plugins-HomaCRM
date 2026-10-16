@@ -19,3 +19,14 @@
 .homacrm-hp{position:absolute!important;left:-9999px!important;width:1px!important;height:1px!important;opacity:0}
 .homacrm-gate form.checkout,.homacrm-gate .woocommerce-form-login-toggle,.homacrm-gate .woocommerce-form-coupon-toggle,.homacrm-gate .wc-block-checkout{display:none!important}
 #loginform .homacrm-otp{margin:16px 0;border:0;border-top:1px solid #dcdcde;border-radius:0;padding:16px 0 0;box-shadow:none}
+.homacrm-otp{position:relative;overflow:hidden}
+.homacrm-otp:before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--hc-accent),transparent);background-size:50% 100%;background-repeat:no-repeat;opacity:0;transition:opacity .2s}
+.homacrm-otp.homacrm-busy:before{opacity:1;animation:hcbar 1.1s linear infinite}
+.homacrm-otp.homacrm-busy input{opacity:.6}
+.homacrm-otp .button.is-loading{display:flex;align-items:center;justify-content:center;gap:10px;opacity:1!important;cursor:progress!important;animation:hcpulse 1.2s ease-in-out infinite}
+.homacrm-spin{width:18px;height:18px;border:2.5px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:hcspin .7s linear infinite;flex:0 0 auto}
+.homacrm-otp .button-link.is-loading .homacrm-spin{border-color:color-mix(in srgb,var(--hc-accent) 30%,transparent);border-top-color:var(--hc-accent)}
+@keyframes hcspin{to{transform:rotate(360deg)}}
+@keyframes hcbar{0%{background-position:-50% 0}100%{background-position:150% 0}}
+@keyframes hcpulse{50%{filter:brightness(1.08);transform:scale(.99)}}
+@media (prefers-reduced-motion:reduce){.homacrm-spin,.homacrm-otp .button.is-loading,.homacrm-otp.homacrm-busy:before{animation-duration:2.5s}}

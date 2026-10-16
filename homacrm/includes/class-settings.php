@@ -113,7 +113,7 @@ final class Settings {
 		$tabs = self::tabs();
 		$tab  = isset( $_GET['tab'] ) && isset( $tabs[ $_GET['tab'] ] ) ? sanitize_key( $_GET['tab'] ) : 'connection'; // phpcs:ignore WordPress.Security.NonceVerification
 		$s    = self::all();
-		echo '<div class="wrap homacrm" dir="rtl"><h1><img src="' . esc_url( HOMACRM_URL . 'assets/icon.svg' ) . '" alt="" width="28" height="28"> ' . esc_html__( 'هما — HomaCRM', 'homacrm' ) . '</h1>';
+		echo '<div class="wrap homacrm" dir="rtl"><h1><img src="' . esc_url( HOMACRM_URL . 'assets/icon.svg' ) . '" alt="" width="28" height="28"> ' . esc_html__( 'هما — HomaCRM', 'homacrm' ) . ' <a class="homacrm-site" href="https://homacrm.com/?utm_source=wp-plugin&amp;utm_medium=admin" target="_blank" rel="noopener">HomaCRM.com</a></h1>';
 		if ( isset( $_GET['homacrm_msg'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			echo '<div class="notice notice-info is-dismissible"><p>' . esc_html( sanitize_text_field( wp_unslash( $_GET['homacrm_msg'] ) ) ) . '</p></div>'; // phpcs:ignore WordPress.Security.NonceVerification
 		}

@@ -95,7 +95,7 @@ final class Login {
 				<button type="button" class="button-link homacrm-resend" disabled></button>
 			</div>
 			<p class="homacrm-msg" role="status" aria-live="polite"></p>
-			<p class="homacrm-brand"><?php esc_html_e( 'با پیامکِ هما', 'homacrm' ); ?></p>
+			<p class="homacrm-brand"><?php esc_html_e( 'ورود امن با پیامکِ', 'homacrm' ); ?> <a href="https://homacrm.com/?utm_source=wp-plugin&amp;utm_medium=login" target="_blank" rel="noopener">HomaCRM.com</a></p>
 		</div>
 		<?php
 		return (string) ob_get_clean();

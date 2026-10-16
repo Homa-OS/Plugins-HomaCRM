@@ -38,6 +38,7 @@ final class Forms {
 			<textarea name="message" rows="4" placeholder="<?php esc_attr_e( 'پیام', 'homacrm' ); ?>"></textarea>
 			<input type="text" name="website" value="" tabindex="-1" autocomplete="off" class="homacrm-hp" aria-hidden="true">
 			<button type="submit" class="button button-primary"><?php echo esc_html( $atts['button'] ); ?></button>
+			<p class="homacrm-brand"><?php esc_html_e( 'با', 'homacrm' ); ?> <a href="https://homacrm.com/?utm_source=wp-plugin&amp;utm_medium=form" target="_blank" rel="noopener">HomaCRM.com</a></p>
 		</form>
 		<?php
 		return (string) ob_get_clean();

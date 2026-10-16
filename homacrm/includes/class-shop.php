@@ -41,13 +41,19 @@ final class Shop {
 		return $s;
 	}
 
+	/** توکنِ انبار و فاکتور: اگر جدا تنظیم شده همان، وگرنه توکنِ اصلی. */
+	private static function api( $method, $path, $body = null ) {
+		$t = trim( (string) get_option( 'homacrm_shop_token', '' ) );
+		return Api::request( $method, $path, $body, '' !== $t ? $t : null );
+	}
+
 	/* ---------- کالا، قیمت، موجودی ---------- */
 
 	/** همهٔ صفحه‌های یک فهرستِ هما. */
 	private static function pages( $path ) {
 		$out = array();
 		for ( $page = 1; $page <= 200; $page++ ) {
-			$r = Api::request( 'GET', $path . ( false === strpos( $path, '?' ) ? '?' : '&' ) . 'page=' . $page . '&pageSize=100' );
+			$r = self::api( 'GET', $path . ( false === strpos( $path, '?' ) ? '?' : '&' ) . 'page=' . $page . '&pageSize=100' );
 			if ( ! $r['ok'] || ! is_array( $r['data'] ) ) {
 				return $out ? $out : null;
 			}
@@ -101,6 +107,10 @@ final class Shop {
 			if ( ! $wc ) {
 				continue;
 			}
+			if ( ! empty( $p['categoryId'] ) && (string) $wc->get_meta( '_homa_cat_id' ) !== (string) $p['categoryId'] ) {
+				$wc->update_meta_data( '_homa_cat_id', (string) $p['categoryId'] );
+				$wc->save_meta_data();
+			}
 			$changed = false;
 			$price   = self::price( $p['price'] ?? 0 );
 			if ( $price > 0 && (float) $wc->get_regular_price() !== (float) $price && '' === (string) $wc->get_sale_price() ) {
@@ -141,7 +151,7 @@ final class Shop {
 		if ( false !== $c ) {
 			return (float) $c;
 		}
-		$r = Api::request( 'GET', '/warehouse/inventory?productId=' . rawurlencode( (string) $homa_id ) );
+		$r = self::api( 'GET', '/warehouse/inventory?productId=' . rawurlencode( (string) $homa_id ) );
 		if ( ! $r['ok'] || empty( $r['data'][0] ) ) {
 			return null;
 		}
@@ -199,7 +209,7 @@ final class Shop {
 		if ( $g > 0 ) {
 			$c['groupId'] = $g;
 		}
-		$r = Api::create_contact( $c );
+		$r = self::api( 'POST', '/crm/contacts', $c );
 		if ( $r['ok'] && isset( $r['data']['id'] ) ) {
 			return (int) $r['data']['id'];
 		}
@@ -236,6 +246,7 @@ final class Shop {
 				'quantity'  => $q,
 				'unitPrice' => self::to_homa( (float) $it->get_total() / $q ),
 				'comments'  => $it->get_name(),
+				'catId'     => (int) get_post_meta( $pid, '_homa_cat_id', true ),
 			);
 		}
 		$ship = (float) $o->get_shipping_total();
@@ -255,12 +266,13 @@ final class Shop {
 		if ( $o->get_customer_note() ) {
 			$note .= ' · ' . $o->get_customer_note();
 		}
-		$r = Api::request(
+		$send = array_map( static function ( $x ) { unset( $x['catId'] ); return $x; }, $items );
+		$r = self::api(
 			'POST',
 			'/finance/invoices',
 			array(
 				'customerId' => $customer,
-				'items'      => $items,
+				'items'      => $send,
 				'status'     => 'ready',
 				'comments'   => $note,
 			)
@@ -269,11 +281,53 @@ final class Shop {
 			$o->update_meta_data( '_homacrm_invoice_id', (int) $r['data']['id'] );
 			$o->update_meta_data( '_homacrm_customer_id', $customer );
 			$o->add_order_note( sprintf( __( 'هما: فاکتورِ %1$s (شناسهٔ %2$d) ثبت شد.', 'homacrm' ), $r['data']['serial'] ?? '', (int) $r['data']['id'] ) . ( $missing ? ' ' . __( 'اقلامِ بی‌کدِ هما: ', 'homacrm' ) . implode( '، ', $missing ) : '' ) );
+			$o->save();
+			self::warehouse_out( $o, $items, (int) $r['data']['id'], (string) ( $r['data']['serial'] ?? '' ) );
 		} else {
 			$o->add_order_note( __( 'هما: ثبتِ فاکتور ناموفق بود — ', 'homacrm' ) . $r['error'] );
 		}
 		$o->save();
 		Log::add( 'shop', Util::mobile( $o->get_billing_phone() ), $r['ok'], $r['ok'] ? '' : $r['error'], 'invoice #' . $o->get_order_number() );
+	}
+
+	/** کسرِ انبار: حوالهٔ خروجِ اقلامِ فاکتور از انبارِ هر کالا (یک بار برای هر سفارش). */
+	private static function warehouse_out( \WC_Order $o, array $items, $invoice_id, $serial ) {
+		if ( $o->get_meta( '_homacrm_wh_id' ) || ! Settings::get( 'shop_wh_out' ) ) {
+			return;
+		}
+		$lines = array();
+		foreach ( $items as $it ) {
+			$cat = (int) ( $it['catId'] ?? 0 );
+			if ( ! $cat ) {
+				// شناسهٔ انبارِ کالا: از همگام‌سازی، وگرنه با جست‌وجوی نام در فهرستِ کالاهای هما.
+				$pr = self::api( 'GET', '/warehouse/products?pageSize=20&search=' . rawurlencode( (string) $it['comments'] ) );
+				foreach ( ( $pr['ok'] && is_array( $pr['data'] ) ) ? $pr['data'] : array() as $row ) {
+					if ( (int) $row['id'] === (int) $it['productId'] ) {
+						$cat = (int) $row['categoryId'];
+					}
+				}
+			}
+			if ( $cat ) {
+				$lines[] = array( 'productId' => (int) $it['productId'], 'quantity' => $it['quantity'], 'categoryId' => $cat );
+			}
+		}
+		if ( ! $lines ) {
+			return;
+		}
+		$r = self::api( 'POST', '/warehouse/inventory/movements', array(
+			'type'      => 'out',
+			'lines'     => $lines,
+			'title'     => sprintf( __( 'حوالهٔ فروشِ اینترنتی — فاکتورِ %s', 'homacrm' ), $serial ),
+			'reference' => 'invoice:' . $invoice_id,
+			'comments'  => sprintf( __( 'سفارشِ %1$s از %2$s', 'homacrm' ), $o->get_order_number(), wp_parse_url( home_url(), PHP_URL_HOST ) ),
+		) );
+		if ( $r['ok'] ) {
+			$o->update_meta_data( '_homacrm_wh_id', $r['data']['id'] ?? 1 );
+			$o->add_order_note( __( 'هما: حوالهٔ خروج از انبار ثبت شد.', 'homacrm' ) );
+		} else {
+			$o->add_order_note( __( 'هما: کسرِ انبار ناموفق بود — ', 'homacrm' ) . $r['error'] );
+		}
+		$o->save();
 	}
 
 	/** پرداختِ موفق یا تأییدِ سفارش ⇒ فاکتور، و اگر پول رسیده، دریافت روی همان فاکتور. */
@@ -302,7 +356,17 @@ final class Shop {
 		if ( $bank > 0 ) {
 			$body['bankId'] = $bank;
 		}
-		$r = Api::request( 'POST', '/finance/payments', $body );
+		// اگر دریافتی با همین مبلغ روی فاکتور هست (مثلاً پاسخِ قبلی دیر رسید)، دوباره ثبت نکن.
+		$ex = self::api( 'GET', '/finance/payments?invoiceId=' . $inv . '&pageSize=20' );
+		foreach ( ( $ex['ok'] && is_array( $ex['data'] ) ) ? $ex['data'] : array() as $pay ) {
+			if ( (float) ( $pay['amount'] ?? 0 ) === (float) $body['amount'] ) {
+				$o->update_meta_data( '_homacrm_payment_id', $pay['id'] );
+				$o->add_order_note( __( 'هما: دریافتِ این فاکتور از قبل ثبت بود.', 'homacrm' ) );
+				$o->save();
+				return;
+			}
+		}
+		$r = self::api( 'POST', '/finance/payments', $body );
 		if ( $r['ok'] ) {
 			$o->update_meta_data( '_homacrm_payment_id', $r['data']['id'] ?? 1 );
 			$o->add_order_note( __( 'هما: دریافتِ وجه روی فاکتور ثبت شد.', 'homacrm' ) );

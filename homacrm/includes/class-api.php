@@ -26,7 +26,7 @@ final class Api {
 		}
 		$args = array(
 			'method'  => $method,
-			'timeout' => 20,
+			'timeout' => ( 'GET' === $method ? 20 : 45 ),
 			'headers' => array(
 				'Authorization' => $token,
 				'Accept'        => 'application/json',

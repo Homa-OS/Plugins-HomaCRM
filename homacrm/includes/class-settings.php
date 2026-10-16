@@ -46,6 +46,7 @@ final class Settings {
 			// فروشگاهِ هما (انبار و فاکتور)
 			'shop_sync'           => 0,
 			'shop_invoice'        => 0,
+			'shop_wh_out'         => 1,
 			'shop_shipping_ware'  => 0,
 			'shop_bank_id'        => 0,
 			'shop_price_factor'   => 1.0,
@@ -200,6 +201,8 @@ final class Settings {
 		echo '<tr><th colspan="2"><h2>' . esc_html__( 'انبار و فاکتورِ هما', 'homacrm' ) . '</h2></th></tr>';
 		self::checkbox( 'shop_sync', $s, __( 'قیمت و موجودیِ کالاها هر ۱۵ دقیقه از انبارِ هما، و موجودیِ زنده پیش از پرداخت', 'homacrm' ) );
 		self::checkbox( 'shop_invoice', $s, __( 'سفارشِ پرداخت‌شده/تأییدشده ⇒ فاکتورِ فروش در هما (کسرِ انبار و سند) و ثبتِ دریافت', 'homacrm' ) );
+		self::checkbox( 'shop_wh_out', $s, __( 'با هر فاکتور، حوالهٔ خروج از انبارِ هما هم ثبت شود (کسرِ موجودی)', 'homacrm' ) );
+		self::row( __( 'توکنِ جدا برای انبار و فاکتور', 'homacrm' ), '<input type="password" name="shop_token" value="" class="regular-text" dir="ltr" autocomplete="off" placeholder="' . ( get_option( 'homacrm_shop_token' ) ? esc_attr__( '(تنظیم شده؛ برای تغییر بنویسید)', 'homacrm' ) : '' ) . '"><p class="description">' . esc_html__( 'اختیاری؛ اگر انبار و فاکتور در پرتالِ دیگری است. خالی = توکنِ اصلی.', 'homacrm' ) . '</p>' );
 		self::row( __( 'کالای «هزینهٔ ارسال» در هما', 'homacrm' ), '<input type="number" name="shop_shipping_ware" value="' . esc_attr( $s['shop_shipping_ware'] ) . '"><p class="description">' . esc_html__( 'شناسهٔ کالای خدماتیِ ارسال؛ ۰ = هزینهٔ ارسال فقط در توضیحِ فاکتور.', 'homacrm' ) . '</p>' );
 		self::row( __( 'حسابِ بانکیِ دریافت', 'homacrm' ), '<input type="number" name="shop_bank_id" value="' . esc_attr( $s['shop_bank_id'] ) . '"><p class="description">' . esc_html__( 'شناسهٔ بانک در خزانهٔ هما؛ ۰ = دریافتِ نقدی.', 'homacrm' ) . '</p>' );
 		self::row( __( 'ضریبِ قیمت', 'homacrm' ), '<input type="number" step="0.01" name="shop_price_factor" value="' . esc_attr( $s['shop_price_factor'] ) . '"><p class="description">' . esc_html__( 'قیمتِ ووکامرس = قیمتِ هما × ضریب (مثلاً ریال به تومان: 0.1).', 'homacrm' ) . '</p>' );
@@ -265,7 +268,7 @@ final class Settings {
 		$tab = sanitize_key( $in['tab'] ?? '' );
 		$checkboxes = array(
 			'login' => array( 'otp_enabled', 'otp_on_wp_login', 'otp_on_woo', 'otp_register', 'otp_checkout_gate' ),
-			'woo'   => array( 'woo_enabled', 'woo_sync_contact', 'shop_sync', 'shop_invoice' ),
+			'woo'   => array( 'woo_enabled', 'woo_sync_contact', 'shop_sync', 'shop_invoice', 'shop_wh_out' ),
 			'crm'   => array( 'crm_sync_users', 'forms_enabled' ),
 			'about' => array( 'auto_update', 'notify_email', 'notify_sms' ),
 		);
@@ -293,6 +296,11 @@ final class Settings {
 		}
 		update_option( self::OPTION, $s, false );
 		$msg = __( 'ذخیره شد.', 'homacrm' );
+		if ( 'woo' === $tab && ! empty( $in['shop_token'] ) ) {
+			$st = trim( sanitize_text_field( $in['shop_token'] ) );
+			$sv = Api::verify( $st );
+			update_option( 'homacrm_shop_token', $sv['ok'] ? $st : get_option( 'homacrm_shop_token', '' ), false );
+		}
 		if ( 'connection' === $tab && ! empty( $in['token'] ) ) {
 			$token = trim( sanitize_text_field( $in['token'] ) );
 			$v     = Api::verify( $token );

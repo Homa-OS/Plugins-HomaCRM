@@ -57,11 +57,15 @@ final class Api {
 		if ( 401 === $status || 403 === $status ) {
 			$msg = $msg ? $msg : __( 'توکن نامعتبر است یا دسترسیِ لازم را ندارد.', 'homacrm' );
 		}
-		return self::fail( $status, $msg ? $msg : sprintf( __( 'خطای هما (HTTP %d)', 'homacrm' ), $status ) );
+		$fail = self::fail( $status, $msg ? $msg : sprintf( __( 'خطای هما (HTTP %d)', 'homacrm' ), $status ) );
+		if ( is_array( $json ) && isset( $json['error']['details'] ) && is_array( $json['error']['details'] ) ) {
+			$fail['details'] = $json['error']['details'];
+		}
+		return $fail;
 	}
 
 	private static function fail( $status, $error ) {
-		return array( 'ok' => false, 'status' => (int) $status, 'data' => null, 'error' => (string) $error );
+		return array( 'ok' => false, 'status' => (int) $status, 'data' => null, 'error' => (string) $error, 'details' => array() );
 	}
 
 	/* ---------- میان‌برها ---------- */

@@ -37,6 +37,9 @@ final class Plugin {
 		if ( class_exists( 'WooCommerce' ) && Settings::get( 'woo_enabled' ) ) {
 			Woocommerce::init();
 		}
+		if ( class_exists( 'WooCommerce' ) && ( Settings::get( 'shop_sync' ) || Settings::get( 'shop_invoice' ) || wp_next_scheduled( Shop::CRON ) ) ) {
+			Shop::init();
+		}
 		Abilities::init();
 		Updater::init();
 

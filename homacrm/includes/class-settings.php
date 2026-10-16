@@ -42,6 +42,12 @@ final class Settings {
 			'woo_sync_contact'    => 1,
 			'woo_deal_pipeline'   => 0,
 			'woo_deal_stage'      => 0,
+			// فروشگاهِ هما (انبار و فاکتور)
+			'shop_sync'           => 0,
+			'shop_invoice'        => 0,
+			'shop_shipping_ware'  => 0,
+			'shop_bank_id'        => 0,
+			'shop_price_factor'   => 1.0,
 			// CRM
 			'crm_sync_users'      => 0,
 			'crm_group_id'        => 0,
@@ -189,6 +195,12 @@ final class Settings {
 		self::row( __( 'متنِ پیامکِ مدیر', 'homacrm' ), '<textarea name="woo_admin_template" rows="2" class="large-text">' . esc_textarea( $s['woo_admin_template'] ) . '</textarea>' );
 		self::checkbox( 'woo_sync_contact', $s, __( 'خریدار در CRMِ هما «مخاطب» شود', 'homacrm' ) );
 		self::row( __( 'ثبتِ سفارش به‌عنوانِ معامله', 'homacrm' ), '<input type="number" name="woo_deal_pipeline" value="' . esc_attr( $s['woo_deal_pipeline'] ) . '" placeholder="pipelineId"> <input type="number" name="woo_deal_stage" value="' . esc_attr( $s['woo_deal_stage'] ) . '" placeholder="stageId"><p class="description">' . esc_html__( 'خالی/۰ = خاموش. شناسه‌ها را از «ابزارها» ببینید.', 'homacrm' ) . '</p>' );
+		echo '<tr><th colspan="2"><h2>' . esc_html__( 'انبار و فاکتورِ هما', 'homacrm' ) . '</h2></th></tr>';
+		self::checkbox( 'shop_sync', $s, __( 'قیمت و موجودیِ کالاها هر ۱۵ دقیقه از انبارِ هما، و موجودیِ زنده پیش از پرداخت', 'homacrm' ) );
+		self::checkbox( 'shop_invoice', $s, __( 'سفارشِ پرداخت‌شده/تأییدشده ⇒ فاکتورِ فروش در هما (کسرِ انبار و سند) و ثبتِ دریافت', 'homacrm' ) );
+		self::row( __( 'کالای «هزینهٔ ارسال» در هما', 'homacrm' ), '<input type="number" name="shop_shipping_ware" value="' . esc_attr( $s['shop_shipping_ware'] ) . '"><p class="description">' . esc_html__( 'شناسهٔ کالای خدماتیِ ارسال؛ ۰ = هزینهٔ ارسال فقط در توضیحِ فاکتور.', 'homacrm' ) . '</p>' );
+		self::row( __( 'حسابِ بانکیِ دریافت', 'homacrm' ), '<input type="number" name="shop_bank_id" value="' . esc_attr( $s['shop_bank_id'] ) . '"><p class="description">' . esc_html__( 'شناسهٔ بانک در خزانهٔ هما؛ ۰ = دریافتِ نقدی.', 'homacrm' ) . '</p>' );
+		self::row( __( 'ضریبِ قیمت', 'homacrm' ), '<input type="number" step="0.01" name="shop_price_factor" value="' . esc_attr( $s['shop_price_factor'] ) . '"><p class="description">' . esc_html__( 'قیمتِ ووکامرس = قیمتِ هما × ضریب (مثلاً ریال به تومان: 0.1).', 'homacrm' ) . '</p>' );
 	}
 
 	private static function tab_crm( $s ) {
@@ -251,7 +263,7 @@ final class Settings {
 		$tab = sanitize_key( $in['tab'] ?? '' );
 		$checkboxes = array(
 			'login' => array( 'otp_enabled', 'otp_on_wp_login', 'otp_on_woo', 'otp_register' ),
-			'woo'   => array( 'woo_enabled', 'woo_sync_contact' ),
+			'woo'   => array( 'woo_enabled', 'woo_sync_contact', 'shop_sync', 'shop_invoice' ),
 			'crm'   => array( 'crm_sync_users', 'forms_enabled' ),
 			'about' => array( 'auto_update', 'notify_email', 'notify_sms' ),
 		);

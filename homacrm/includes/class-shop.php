@@ -42,7 +42,7 @@ final class Shop {
 	}
 
 	/** توکنِ انبار و فاکتور: اگر جدا تنظیم شده همان، وگرنه توکنِ اصلی. */
-	private static function api( $method, $path, $body = null ) {
+	public static function api( $method, $path, $body = null ) {
 		$t = trim( (string) get_option( 'homacrm_shop_token', '' ) );
 		return Api::request( $method, $path, $body, '' !== $t ? $t : null );
 	}
@@ -281,8 +281,8 @@ final class Shop {
 			$o->update_meta_data( '_homacrm_invoice_id', (int) $r['data']['id'] );
 			$o->update_meta_data( '_homacrm_customer_id', $customer );
 			$o->add_order_note( sprintf( __( 'هما: فاکتورِ %1$s (شناسهٔ %2$d) ثبت شد.', 'homacrm' ), $r['data']['serial'] ?? '', (int) $r['data']['id'] ) . ( $missing ? ' ' . __( 'اقلامِ بی‌کدِ هما: ', 'homacrm' ) . implode( '، ', $missing ) : '' ) );
-			$o->save();
-			self::warehouse_out( $o, $items, (int) $r['data']['id'], (string) ( $r['data']['serial'] ?? '' ) );
+			$o->update_meta_data( '_homacrm_invoice_serial', (string) ( $r['data']['serial'] ?? '' ) );
+			$o->update_meta_data( '_homacrm_wh_items', $items );
 		} else {
 			$o->add_order_note( __( 'هما: ثبتِ فاکتور ناموفق بود — ', 'homacrm' ) . $r['error'] );
 		}
@@ -343,6 +343,11 @@ final class Shop {
 		$inv = (int) $o->get_meta( '_homacrm_invoice_id' );
 		if ( $inv <= 0 || 'cod' === $o->get_payment_method() && 'completed' !== $o->get_status() ) {
 			return;
+		}
+		self::warehouse_out( $o, (array) $o->get_meta( '_homacrm_wh_items' ), $inv, (string) $o->get_meta( '_homacrm_invoice_serial' ) );
+		$o = wc_get_order( $order_id );
+		if ( $o->get_meta( '_homacrm_payment_id' ) ) {
+			return; // درگاهِ هما خودش دریافت را ثبت کرده است.
 		}
 		$bank = (int) Settings::get( 'shop_bank_id' );
 		$body = array(

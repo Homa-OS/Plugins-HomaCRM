@@ -3,7 +3,7 @@
  * Plugin Name:       HomaCRM — هما
  * Plugin URI:        https://homacrm.com
  * Description:       افزونهٔ رسمیِ هما برای وردپرس و ووکامرس: پیامک، ورود و ثبت‌نام با پیامک، اطلاع‌رسانیِ سفارش، همگام‌سازیِ مشتری و سفارش با CRMِ هما، فرمِ سرنخ و تیکت، و ابزارهای MCP — همه با یک توکنِ API.
- * Version:           1.0.0
+ * Version:           1.0.1
  * Requires at least: 6.0
  * Requires PHP:      7.4
  * Author:            HomaCRM (فناوران نگین شهر نوین)
@@ -18,7 +18,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'HOMACRM_VERSION', '1.0.0' );
+define( 'HOMACRM_VERSION', '1.0.1' );
 define( 'HOMACRM_RELEASED', '2026-10-16' ); // ۱۴۰۵/۰۷/۲۴
 define( 'HOMACRM_FILE', __FILE__ );
 define( 'HOMACRM_DIR', plugin_dir_path( __FILE__ ) );

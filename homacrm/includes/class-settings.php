@@ -61,6 +61,21 @@ final class Settings {
 			'notify_email'        => 1,
 			'notify_sms'          => 0,
 			'notify_mobile'       => '',
+			// بازاریابی
+			'eng_cart'            => 0,
+			'eng_cart_h1'         => 1,
+			'eng_cart_h2'         => 24,
+			'eng_cart_tpl'        => "سبدِ خریدتان در {site} منتظرِ شماست ({product}).\nتکمیلِ خرید: {link}\nلغو11",
+			'eng_stock'           => 0,
+			'eng_stock_tpl'       => "«{product}» در {site} دوباره موجود شد.\n{link}",
+			'eng_birthday'        => 0,
+			'eng_bd_percent'      => 10,
+			'eng_bd_tpl'          => "{name} عزیز، تولدت مبارک 🎂\nهدیهٔ {site}: کدِ {code} با {percent}٪ تخفیف، تا یک هفته.\nلغو11",
+			'eng_tracking'        => 0,
+			'eng_track_tpl'       => "{name} عزیز، سفارشِ {order} با {carrier} ارسال شد.\nکدِ رهگیری: {tracking}\n{link}",
+			'eng_review'          => 0,
+			'eng_review_days'     => 5,
+			'eng_review_tpl'      => "{name} عزیز، از «{product}» راضی بودید؟ نظرتان به دیگران کمک می‌کند:\n{link}\nلغو11",
 			// لاگ
 			'log_days'            => 30,
 		);
@@ -107,6 +122,7 @@ final class Settings {
 			'connection' => __( 'اتصال', 'homacrm' ),
 			'login'      => __( 'ورود با پیامک', 'homacrm' ),
 			'woo'        => __( 'ووکامرس', 'homacrm' ),
+			'engage'     => __( 'بازاریابی', 'homacrm' ),
 			'crm'        => __( 'CRM و فرم‌ها', 'homacrm' ),
 			'tools'      => __( 'ابزارها و گزارش', 'homacrm' ),
 			'about'      => __( 'درباره', 'homacrm' ),
@@ -208,6 +224,25 @@ final class Settings {
 		self::row( __( 'ضریبِ قیمت', 'homacrm' ), '<input type="number" step="0.01" name="shop_price_factor" value="' . esc_attr( $s['shop_price_factor'] ) . '"><p class="description">' . esc_html__( 'قیمتِ ووکامرس = قیمتِ هما × ضریب (مثلاً ریال به تومان: 0.1).', 'homacrm' ) . '</p>' );
 	}
 
+	private static function tab_engage( $s ) {
+		$ta = static function ( $k ) use ( $s ) { return '<textarea name="' . esc_attr( $k ) . '" rows="3" class="large-text">' . esc_textarea( $s[ $k ] ) . '</textarea>'; };
+		$nm = static function ( $k, $suffix ) use ( $s ) { return '<input type="number" min="0" name="' . esc_attr( $k ) . '" value="' . esc_attr( $s[ $k ] ) . '" style="width:80px"> ' . esc_html( $suffix ); };
+		echo '<tr><td colspan="2"><p class="description">' . esc_html__( 'پیامک‌های تبلیغاتی فقط ۹ صبح تا ۹ شب فرستاده می‌شوند.', 'homacrm' ) . '</p></td></tr>';
+		self::checkbox( 'eng_cart', $s, __( 'یادآورِ سبدِ رهاشده (دو پیامک با لینکِ بازگشت به سبد)', 'homacrm' ) );
+		self::row( __( 'زمانِ یادآوری', 'homacrm' ), $nm( 'eng_cart_h1', __( 'ساعت بعد، و', 'homacrm' ) ) . ' ' . $nm( 'eng_cart_h2', __( 'ساعت بعد', 'homacrm' ) ) );
+		self::row( __( 'متنِ یادآور', 'homacrm' ), $ta( 'eng_cart_tpl' ) . '<p class="description"><code>{site} {product} {link}</code></p>' );
+		self::checkbox( 'eng_stock', $s, __( '«موجود شد خبرم کن» روی کالای ناموجود', 'homacrm' ) );
+		self::row( __( 'متنِ موجود شد', 'homacrm' ), $ta( 'eng_stock_tpl' ) . '<p class="description"><code>{product} {site} {link}</code></p>' );
+		self::checkbox( 'eng_birthday', $s, __( 'تبریکِ تولد با کدِ تخفیفِ یک‌بارمصرف (روز و ماهِ تولد در «حسابِ من»)', 'homacrm' ) );
+		self::row( __( 'درصدِ تخفیفِ تولد', 'homacrm' ), $nm( 'eng_bd_percent', '٪ (۰ = بی کد)' ) );
+		self::row( __( 'متنِ تبریک', 'homacrm' ), $ta( 'eng_bd_tpl' ) . '<p class="description"><code>{name} {site} {code} {percent}</code></p>' );
+		self::checkbox( 'eng_tracking', $s, __( 'کادرِ کدِ رهگیری در صفحهٔ سفارش و پیامکِ آن به خریدار', 'homacrm' ) );
+		self::row( __( 'متنِ کدِ رهگیری', 'homacrm' ), $ta( 'eng_track_tpl' ) . '<p class="description"><code>{name} {order} {carrier} {tracking} {link}</code></p>' );
+		self::checkbox( 'eng_review', $s, __( 'درخواستِ نظر چند روز بعد از تکمیلِ سفارش', 'homacrm' ) );
+		self::row( __( 'چند روز بعد', 'homacrm' ), $nm( 'eng_review_days', __( 'روز', 'homacrm' ) ) );
+		self::row( __( 'متنِ درخواستِ نظر', 'homacrm' ), $ta( 'eng_review_tpl' ) . '<p class="description"><code>{name} {product} {link}</code></p>' );
+	}
+
 	private static function tab_crm( $s ) {
 		self::checkbox( 'crm_sync_users', $s, __( 'هر کاربرِ تازهٔ وردپرس (با موبایل) در CRMِ هما «مخاطب» شود', 'homacrm' ) );
 		self::row( __( 'گروهِ مخاطبان', 'homacrm' ), '<input type="number" name="crm_group_id" value="' . esc_attr( $s['crm_group_id'] ) . '"><p class="description">' . esc_html__( 'شناسهٔ گروه در هما؛ ۰ = بی‌گروه.', 'homacrm' ) . '</p>' );
@@ -270,6 +305,7 @@ final class Settings {
 			'login' => array( 'otp_enabled', 'otp_on_wp_login', 'otp_on_woo', 'otp_register', 'otp_checkout_gate' ),
 			'woo'   => array( 'woo_enabled', 'woo_sync_contact', 'shop_sync', 'shop_invoice', 'shop_wh_out' ),
 			'crm'   => array( 'crm_sync_users', 'forms_enabled' ),
+			'engage' => array( 'eng_cart', 'eng_stock', 'eng_birthday', 'eng_tracking', 'eng_review' ),
 			'about' => array( 'auto_update', 'notify_email', 'notify_sms' ),
 		);
 		foreach ( $checkboxes[ $tab ] ?? array() as $k ) {

@@ -40,6 +40,9 @@ final class Plugin {
 		if ( class_exists( 'WooCommerce' ) && ( Settings::get( 'shop_sync' ) || Settings::get( 'shop_invoice' ) || wp_next_scheduled( Shop::CRON ) ) ) {
 			Shop::init();
 		}
+		if ( class_exists( 'WooCommerce' ) ) {
+			Engage::init();
+		}
 		if ( class_exists( 'WooCommerce' ) && Settings::get( 'shop_invoice' ) ) {
 			require_once HOMACRM_DIR . 'includes/class-gateway.php';
 			Gateway_Loader::init();

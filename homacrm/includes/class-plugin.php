@@ -38,6 +38,7 @@ final class Plugin {
 			Woocommerce::init();
 		}
 		Abilities::init();
+		Updater::init();
 
 		// برای توسعه‌دهنده‌ها: do_action( 'homacrm_send_sms', $mobile, $message, $context ).
 		add_action(

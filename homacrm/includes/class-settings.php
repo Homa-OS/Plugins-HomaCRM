@@ -48,6 +48,11 @@ final class Settings {
 			// فرم‌ها
 			'forms_enabled'       => 0,
 			'forms_target'        => 'lead',
+			// به‌روزرسانی و اطلاع‌رسانی
+			'auto_update'         => 0,
+			'notify_email'        => 1,
+			'notify_sms'          => 0,
+			'notify_mobile'       => '',
 			// لاگ
 			'log_days'            => 30,
 		);
@@ -120,9 +125,10 @@ final class Settings {
 
 		if ( 'tools' === $tab ) {
 			self::tools_tab();
-		} elseif ( 'about' === $tab ) {
-			self::about_tab();
 		} else {
+			if ( 'about' === $tab ) {
+				self::about_tab();
+			}
 			echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '">';
 			wp_nonce_field( 'homacrm_save' );
 			echo '<input type="hidden" name="action" value="homacrm_save"><input type="hidden" name="tab" value="' . esc_attr( $tab ) . '"><table class="form-table" role="presentation">';
@@ -219,6 +225,15 @@ final class Settings {
 		Log::render();
 	}
 
+	private static function tab_about( $s ) {
+		$l = Updater::latest();
+		self::row( __( 'آخرین نسخه', 'homacrm' ), $l ? esc_html( $l['version'] . ' — ' . $l['date'] ) . ( version_compare( $l['version'], HOMACRM_VERSION, '>' ) ? ' <b>' . esc_html__( '(تازه‌تر از نسخهٔ شما)', 'homacrm' ) . '</b>' : ' ✓' ) : esc_html__( 'خوانده نشد', 'homacrm' ) );
+		self::checkbox( 'auto_update', $s, __( 'نسخه‌های تازه خودکار نصب شوند', 'homacrm' ) );
+		self::checkbox( 'notify_email', $s, __( 'نسخهٔ تازه به ایمیلِ مدیرِ سایت خبر داده شود', 'homacrm' ) );
+		self::checkbox( 'notify_sms', $s, __( 'نسخهٔ تازه با پیامک هم خبر داده شود (از اعتبارِ همین پرتال)', 'homacrm' ) );
+		self::row( __( 'موبایلِ مدیر', 'homacrm' ), '<input type="text" name="notify_mobile" value="' . esc_attr( $s['notify_mobile'] ) . '" dir="ltr" placeholder="09xxxxxxxxx">' );
+	}
+
 	private static function about_tab() {
 		echo '<div class="homacrm-about"><p><b>HomaCRM — هما</b> · ' . esc_html__( 'نسخه', 'homacrm' ) . ' ' . esc_html( HOMACRM_VERSION ) . ' · ' . esc_html__( 'به‌روزرسانی', 'homacrm' ) . ' ' . esc_html( HOMACRM_RELEASED ) . '</p>';
 		echo '<p>' . esc_html__( 'افزونهٔ رسمیِ هما برای وردپرس و ووکامرس. ساخته و نگهداری‌شده توسطِ هما (فناوران نگین شهر نوین).', 'homacrm' ) . '</p>';
@@ -238,6 +253,7 @@ final class Settings {
 			'login' => array( 'otp_enabled', 'otp_on_wp_login', 'otp_on_woo', 'otp_register' ),
 			'woo'   => array( 'woo_enabled', 'woo_sync_contact' ),
 			'crm'   => array( 'crm_sync_users', 'forms_enabled' ),
+			'about' => array( 'auto_update', 'notify_email', 'notify_sms' ),
 		);
 		foreach ( $checkboxes[ $tab ] ?? array() as $k ) {
 			$s[ $k ] = empty( $in[ $k ] ) ? 0 : 1;

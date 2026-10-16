@@ -110,7 +110,7 @@ final class Login {
 				<div class="homacrm-row"><button type="button" class="button-link homacrm-edit"><?php esc_html_e( 'ویرایشِ شماره', 'homacrm' ); ?></button><button type="button" class="button-link homacrm-resend" disabled></button></div>
 			</div>
 			<p class="homacrm-msg" role="status" aria-live="polite"></p>
-			<p class="homacrm-brand"><?php esc_html_e( 'ورود امن با پیامکِ', 'homacrm' ); ?> <a href="https://homacrm.com/?utm_source=wp-plugin&amp;utm_medium=login" target="_blank" rel="noopener">HomaCRM.com</a></p>
+			<p class="homacrm-brand"><?php esc_html_e( 'ورود امن با', 'homacrm' ); ?> <a href="https://homacrm.com/?utm_source=wp-plugin&amp;utm_medium=login" target="_blank" rel="noopener" dir="ltr">HomaCRM</a></p>
 		</div>
 		<?php
 		return (string) ob_get_clean();

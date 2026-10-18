@@ -283,7 +283,7 @@ final class Settings {
 
 	private static function tab_about( $s ) {
 		$l = Updater::latest();
-		self::row( __( 'آخرین نسخه', 'homacrm' ), $l ? esc_html( $l['version'] . ' — ' . $l['date'] ) . ( version_compare( $l['version'], HOMACRM_VERSION, '>' ) ? ' <b>' . esc_html__( '(تازه‌تر از نسخهٔ شما)', 'homacrm' ) . '</b>' : ' ✓' ) : esc_html__( 'خوانده نشد', 'homacrm' ) );
+		self::row( __( 'آخرین نسخهٔ منتشرشده', 'homacrm' ), $l ? esc_html( $l['version'] . ' — ' . $l['date'] ) . ( version_compare( $l['version'], HOMACRM_VERSION, '>' ) ? ' <b>' . esc_html__( '(تازه‌تر از نسخهٔ شما)', 'homacrm' ) . '</b>' : ' ✓ ' . esc_html__( 'نسخهٔ شما به‌روز است', 'homacrm' ) ) : esc_html__( 'خوانده نشد', 'homacrm' ) );
 		self::checkbox( 'auto_update', $s, __( 'نسخه‌های تازه خودکار نصب شوند', 'homacrm' ) );
 		self::checkbox( 'notify_email', $s, __( 'نسخهٔ تازه به ایمیلِ مدیرِ سایت خبر داده شود', 'homacrm' ) );
 		self::checkbox( 'notify_sms', $s, __( 'نسخهٔ تازه با پیامک هم خبر داده شود (از اعتبارِ همین پرتال)', 'homacrm' ) );
@@ -291,9 +291,23 @@ final class Settings {
 	}
 
 	private static function about_tab() {
-		echo '<div class="homacrm-about"><p><b>HomaCRM — هما</b> · ' . esc_html__( 'نسخه', 'homacrm' ) . ' ' . esc_html( HOMACRM_VERSION ) . ' · ' . esc_html__( 'به‌روزرسانی', 'homacrm' ) . ' ' . esc_html( HOMACRM_RELEASED ) . '</p>';
-		echo '<p>' . esc_html__( 'افزونهٔ رسمیِ هما برای وردپرس و ووکامرس. ساخته و نگهداری‌شده توسطِ هما (فناوران نگین شهر نوین).', 'homacrm' ) . '</p>';
-		echo '<p><a href="https://homacrm.com" target="_blank" rel="noopener">homacrm.com</a> · <a href="https://github.com/Homa-OS/homacrm-wordpress" target="_blank" rel="noopener">GitHub</a></p></div>';
+		$l      = Updater::latest();
+		$newer  = $l && version_compare( $l['version'], HOMACRM_VERSION, '>' );
+		$portal = (string) get_transient( 'homacrm_pay_portal' );
+		$cells  = array(
+			__( 'نسخهٔ نصب‌شده', 'homacrm' )  => 'v' . HOMACRM_VERSION,
+			__( 'تاریخِ به‌روزرسانی', 'homacrm' ) => HOMACRM_RELEASED,
+			__( 'وضعیت', 'homacrm' )          => $newer ? sprintf( __( 'نسخهٔ %s آماده است', 'homacrm' ), $l['version'] ) : __( 'به‌روز ✓', 'homacrm' ),
+			__( 'اتصال به هما', 'homacrm' )   => '' !== self::token() ? ( '' !== $portal ? sprintf( __( 'وصل · پرتال %s', 'homacrm' ), $portal ) : __( 'وصل', 'homacrm' ) ) : __( 'وصل نیست', 'homacrm' ),
+			__( 'وردپرس / PHP', 'homacrm' )   => 'WP ' . get_bloginfo( 'version' ) . ' · PHP ' . PHP_VERSION,
+			__( 'ووکامرس', 'homacrm' )        => defined( 'WC_VERSION' ) ? WC_VERSION : __( 'نصب نیست', 'homacrm' ),
+		);
+		echo '<div class="homacrm-card"><div class="homacrm-card-top"><img src="' . esc_url( HOMACRM_URL . 'assets/icon.svg' ) . '" alt="HomaCRM" width="72" height="72"><div><div class="homacrm-card-name" dir="ltr">HomaCRM <span>v' . esc_html( HOMACRM_VERSION ) . '</span></div>';
+		echo '<p>' . esc_html__( 'افزونهٔ رسمیِ هما برای وردپرس و ووکامرس. ساخته و نگهداری‌شده توسطِ هما (فناوران نگین شهر نوین).', 'homacrm' ) . '</p></div></div><dl class="homacrm-grid">';
+		foreach ( $cells as $k => $v ) {
+			echo '<div><dt>' . esc_html( $k ) . '</dt><dd dir="auto">' . esc_html( $v ) . '</dd></div>';
+		}
+		echo '</dl><div class="homacrm-card-links"><a class="button button-primary" href="https://homacrm.com/?utm_source=wp-plugin&amp;utm_medium=about" target="_blank" rel="noopener">homacrm.com</a> <a class="button" href="https://github.com/Homa-OS/homacrm-wordpress" target="_blank" rel="noopener">GitHub</a></div></div>';
 	}
 
 	/* ---------- ذخیره ---------- */

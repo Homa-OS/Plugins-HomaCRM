@@ -19,7 +19,7 @@
 defined( 'ABSPATH' ) || exit;
 
 define( 'HOMACRM_VERSION', '3.13.10' );
-define( 'HOMACRM_RELEASED', '2026-10-16' ); // ۱۴۰۵/۰۷/۲۴
+define( 'HOMACRM_RELEASED', '2026-10-18' );
 define( 'HOMACRM_FILE', __FILE__ );
 define( 'HOMACRM_DIR', plugin_dir_path( __FILE__ ) );
 define( 'HOMACRM_URL', plugin_dir_url( __FILE__ ) );

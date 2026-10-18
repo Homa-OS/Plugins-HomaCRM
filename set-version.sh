@@ -7,5 +7,6 @@ V=${1:-$(curl -fsS -m 15 https://homacrm.com/api/version | python3 -c 'import js
 sed -i.bak -E "s/^( \* Version: +).*/\1$V/" homacrm/homacrm.php
 sed -i.bak -E "s/define\( 'HOMACRM_VERSION', '[^']*' \)/define( 'HOMACRM_VERSION', '$V' )/" homacrm/homacrm.php
 sed -i.bak -E "s/^Stable tag: .*/Stable tag: $V/" homacrm/readme.txt
+sed -i.bak -E "s/define\( 'HOMACRM_RELEASED', '[^']*' \)/define( 'HOMACRM_RELEASED', '$(date +%F)' )/" homacrm/homacrm.php
 rm -f homacrm/homacrm.php.bak homacrm/readme.txt.bak
 echo "نسخهٔ افزونه: $V"

@@ -95,7 +95,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}
 th,td{padding:10px 14px;text-align:right;border-bottom:1px solid var(--line);vertical-align:top}
 tr:last-child th,tr:last-child td{border-bottom:0}
 th{width:34%;color:var(--muted);font-weight:700;background:#f6f8fa}
-code{font:600 13px ui-monospace,Menlo,Consolas,monospace;direction:ltr;unicode-bidi:embed;background:#f1f4f6;border-radius:6px;padding:1px 6px}
+code{display:inline-block;max-width:100%;overflow-wrap:anywhere;font:600 13px ui-monospace,Menlo,Consolas,monospace;direction:ltr;unicode-bidi:embed;background:#f1f4f6;border-radius:6px;padding:1px 6px}
 @media(max-width:560px){.blk{grid-template-columns:1fr}th{width:38%}}
 @media(max-width:560px){.feat{grid-template-columns:1fr}.btn{width:100%}nav{gap:12px;font-size:13px}header .w{flex-wrap:wrap;justify-content:center}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn{transition:none}}
@@ -134,7 +134,7 @@ code{font:600 13px ui-monospace,Menlo,Consolas,monospace;direction:ltr;unicode-b
   <section id="faq" aria-labelledby="h-q">
     <h2 id="h-q">پرسش‌های پرتکرار</h2>
     <details><summary>افزونه پیامک وردپرس هما چه کاری می‌کند؟</summary><p>پیامک خودکار ثبت، پرداخت و ارسال سفارش، ورود و ثبت‌نام با کد پیامکی، یادآوری سبد رهاشده و ثبت مشتری‌ها و سفارش‌ها در CRM هما.</p></details>
-    <details><summary>توکن را از کجا بگیرم؟</summary><p>بعد از نصب، در منوی HomaCRM دکمهٔ ثبت‌نام رایگان را بزنید؛ با شمارهٔ موبایل ثبت‌نام کنید، توکن را کپی و در افزونه بچسبانید.</p></details>
+    <details><summary>توکن را از کجا بگیرم؟</summary><p>بعد از نصب، در منوی HomaCRM دکمهٔ ثبت‌نام رایگان را بزنید؛ با شمارهٔ موبایل ثبت‌نام کنید، توکن را کپی و در افزونه بچسبانید. راهنمای کامل در <a href="https://homacrm.com/api/v1/external/docs?utm_source=plugin-landing&amp;utm_medium=faq" target="_blank" rel="noopener">مستندات API هما</a> هم هست.</p></details>
     <details><summary>با کدام نسخهٔ وردپرس و ووکامرس سازگار است؟</summary><p>وردپرس ۵.۲ به بالا و PHP ۷.۲ به بالا؛ با ووکامرس و ووکامرس فارسی سازگار است.</p></details>
     <details><summary>پشتیبانی و تماس؟</summary><p>برای پشتیبانی، نصب و هر پرسشی به <a class="ltr" href="mailto:support@homacrm.com">support@homacrm.com</a> ایمیل بزنید.</p></details>
     <details><summary>آیا جایگزین Digits می‌شود؟</summary><p>بله؛ ورود و ثبت‌نام با کد پیامکی را در صفحهٔ ورود وردپرس، حساب کاربری و تسویه‌حساب ووکامرس فعال می‌کند و کاربران قبلی با همان موبایل وارد می‌شوند.</p></details>
@@ -162,7 +162,7 @@ code{font:600 13px ui-monospace,Menlo,Consolas,monospace;direction:ltr;unicode-b
       <tr><th>نام افزونه</th><td>HomaCRM — هما برای وردپرس و ووکامرس</td></tr>
       <tr><th>نسخه</th><td class="ltr">v{{VERSION}} (همیشه برابر نسخهٔ زندهٔ هما)</td></tr>
       <tr><th>پیش‌نیاز</th><td>وردپرس ۵٫۲ به بالا · PHP ۷٫۲ به بالا · ووکامرس اختیاری (سازگار با HPOS و ووکامرس فارسی)</td></tr>
-      <tr><th>اتصال</th><td>فقط با توکن API هما (<code>https://homacrm.com/api/v1/external</code>)</td></tr>
+      <tr><th>اتصال</th><td>فقط با توکن API هما · <a href="https://homacrm.com/api/v1/external/docs?utm_source=plugin-landing&amp;utm_medium=specs" target="_blank" rel="noopener">مستندات API و نحوهٔ گرفتن توکن</a></td></tr>
       <tr><th>مجوز</th><td>GPLv2 یا بالاتر · متن‌باز در <a href="https://github.com/Homa-OS/Plugins-HomaCRM" target="_blank" rel="noopener">GitHub</a></td></tr>
       <tr><th>به‌روزرسانی</th><td>از GitHub Releases؛ اعلان در پیشخوان، به‌روزرسانی یک‌کلیکی یا خودکار، ایمیل و پیامک اختیاری به مدیر سایت</td></tr>
       <tr><th>کدهای کوتاه</th><td><code>[homacrm_login]</code> فرم ورود با پیامک · <code>[homacrm_form]</code> فرم سرنخ یا تیکت</td></tr>

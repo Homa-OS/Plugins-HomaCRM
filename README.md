@@ -153,4 +153,4 @@ release.sh · set-version.sh      انتشارِ نسخه
 
 ## پشتیبانی
 
-از پنلِ هما تیکت بزنید یا به <https://homacrm.com> سر بزنید. پیشنهاد و باگ: بخشِ [Issues](https://github.com/Homa-OS/Plugins-HomaCRM/issues) همین مخزن.
+ایمیل: **support@homacrm.com** (نصب، توکن و هر پرسشی) · یا از پنلِ هما تیکت بزنید · <https://homacrm.com>. پیشنهاد و باگ: بخشِ [Issues](https://github.com/Homa-OS/Plugins-HomaCRM/issues) همین مخزن.

@@ -315,7 +315,7 @@ final class Settings {
 		foreach ( $cells as $k => $v ) {
 			echo '<div><dt>' . esc_html( $k ) . '</dt><dd dir="auto">' . esc_html( $v ) . '</dd></div>';
 		}
-		echo '</dl><p class="description">' . esc_html__( 'برای پشتیبانی، افزونه هنگامِ فعال و غیرفعال شدن و روزی یک بار نشانیِ سایت، نسخه‌ها، وضعیتِ اتصال و ایمیلِ مدیرِ سایت را به هما می‌فرستد.', 'homacrm' ) . '</p><div class="homacrm-card-links"><a class="button button-primary" href="https://homacrm.com/?utm_source=wp-plugin&amp;utm_medium=about" target="_blank" rel="noopener">homacrm.com</a> <a class="button" href="https://github.com/Homa-OS/Plugins-HomaCRM" target="_blank" rel="noopener">GitHub</a></div></div>';
+		echo '</dl><p class="description">' . esc_html__( 'برای پشتیبانی، افزونه هنگامِ فعال و غیرفعال شدن و روزی یک بار نشانیِ سایت، نسخه‌ها، وضعیتِ اتصال و ایمیلِ مدیرِ سایت را به هما می‌فرستد.', 'homacrm' ) . '</p><div class="homacrm-card-links"><a class="button button-primary" href="https://homacrm.com/?utm_source=wp-plugin&amp;utm_medium=about" target="_blank" rel="noopener">homacrm.com</a> <a class="button" href="https://github.com/Homa-OS/Plugins-HomaCRM" target="_blank" rel="noopener">GitHub</a> <a class="button" href="mailto:support@homacrm.com">support@homacrm.com</a></div></div>';
 	}
 
 	/* ---------- ذخیره ---------- */

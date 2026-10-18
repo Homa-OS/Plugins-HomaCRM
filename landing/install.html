@@ -39,7 +39,7 @@ beacon('view');
 f.addEventListener('submit',function(ev){ev.preventDefault();var em=document.getElementById('e').value.trim();m.className='msg';
  if(!/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(em)){m.textContent='ایمیل معتبر نیست.';m.className='msg bad';return}
  b.disabled=true;m.textContent='در حال ارسال…';beacon('click',{id:'send_link'});
- fetch('/api/lead',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:em,website:document.getElementById('w').value,dt:Date.now()-t0,us:q.get('utm_source')||'',um:q.get('utm_medium')||'',uc:q.get('utm_campaign')||'',ref:document.referrer||'',lang:navigator.language||''})})
+ fetch('/api/lead',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:em,website:document.getElementById('w').value,dt:Date.now()-t0,us:q.get('utm_source')||'',um:q.get('utm_medium')||'',uc:q.get('utm_campaign')||'',ut:q.get('utm_content')||'',ref:document.referrer||'',lang:navigator.language||''})})
  .then(function(r){return r.json().then(function(j){return[r.status,j]})}).then(function(a){var st=a[0],j=a[1];
   if(j.ok){document.getElementById('dm').textContent='ارسال شد به: '+em;box.className='c sent';beacon('submit_ok')}
   else if(st==429){m.textContent='درخواست‌ها زیاد است؛ کمی بعد دوباره امتحان کنید.';m.className='msg bad';b.disabled=false}

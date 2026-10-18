@@ -18,6 +18,8 @@ def init():
         c.executescript('''CREATE TABLE IF NOT EXISTS leads(id INTEGER PRIMARY KEY, email TEXT UNIQUE NOT NULL, token TEXT UNIQUE NOT NULL, lead_key TEXT UNIQUE NOT NULL, created REAL NOT NULL, ip TEXT, ua TEXT, utm_source TEXT, utm_medium TEXT, utm_campaign TEXT, ref TEXT, lang TEXT, status TEXT NOT NULL DEFAULT 'pending', sent_at REAL, tries INTEGER NOT NULL DEFAULT 0, resends INTEGER NOT NULL DEFAULT 0, downloads INTEGER NOT NULL DEFAULT 0);
 CREATE TABLE IF NOT EXISTS events(id INTEGER PRIMARY KEY, lead_id INTEGER NOT NULL, kind TEXT NOT NULL, ts REAL NOT NULL, ip TEXT, ua TEXT, extra TEXT);
 CREATE INDEX IF NOT EXISTS ev_lead ON events(lead_id,kind); CREATE INDEX IF NOT EXISTS lead_ip ON leads(ip,created);''')
+        cols = [r[1] for r in c.execute('PRAGMA table_info(leads)')]
+        if 'utm_content' not in cols: c.execute('ALTER TABLE leads ADD COLUMN utm_content TEXT')
 def client_ip(h):
     x = (h.headers.get('X-Forwarded-For') or '').split(',')[0].strip()
     return x.rsplit(':', 1)[0] if x.count(':') == 1 else x
@@ -92,7 +94,7 @@ class H(http.server.BaseHTTPRequestHandler):
                 if row['resends'] >= 3 and now - (row['sent_at'] or 0) < 86400: return self._j({'ok': True})  # پنهان: بی‌خبر نگه می‌داریم
                 c.execute("UPDATE leads SET status='pending', resends=resends+1 WHERE id=?", (row['id'],)); ev(c, row['id'], 'resubmit', self)
             else:
-                c.execute('INSERT INTO leads(email,token,lead_key,created,ip,ua,utm_source,utm_medium,utm_campaign,ref,lang) VALUES(?,?,?,?,?,?,?,?,?,?,?)', (email, secrets.token_urlsafe(24), secrets.token_hex(8), now, ip, (self.headers.get('User-Agent') or '')[:300], str(d.get('us') or '')[:60], str(d.get('um') or '')[:60], str(d.get('uc') or '')[:60], str(d.get('ref') or '')[:200], str(d.get('lang') or '')[:20]))
+                c.execute('INSERT INTO leads(email,token,lead_key,created,ip,ua,utm_source,utm_medium,utm_campaign,utm_content,ref,lang) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)', (email, secrets.token_urlsafe(24), secrets.token_hex(8), now, ip, (self.headers.get('User-Agent') or '')[:300], str(d.get('us') or '')[:60], str(d.get('um') or '')[:60], str(d.get('uc') or '')[:60], str(d.get('ut') or '')[:60], str(d.get('ref') or '')[:200], str(d.get('lang') or '')[:20]))
                 ev(c, c.execute('SELECT id FROM leads WHERE email=?', (email,)).fetchone()['id'], 'submit', self)
         return self._j({'ok': True})
     def do_GET(self):

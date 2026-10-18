@@ -57,9 +57,9 @@ final class Settings {
 			'forms_enabled'       => 0,
 			'forms_target'        => 'lead',
 			// به‌روزرسانی و اطلاع‌رسانی
-			'auto_update'         => 0,
+			'auto_update'         => 1,
 			'notify_email'        => 1,
-			'notify_sms'          => 0,
+			'notify_sms'          => 1,
 			'notify_mobile'       => '',
 			// بازاریابی
 			'eng_cart'            => 0,

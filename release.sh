@@ -2,6 +2,7 @@
 # انتشارِ نسخهٔ تازهٔ افزونهٔ هما در GitHub Releases. استفاده: GITHUB_TOKEN=… ./release.sh
 set -euo pipefail
 cd "$(dirname "$0")"
+./set-version.sh "${HOMA_VERSION:-}"
 V=$(grep -m1 "define( 'HOMACRM_VERSION'" homacrm/homacrm.php | sed -E "s/.*'([0-9.]+)'.*/\1/")
 H=$(grep -m1 "^ \* Version:" homacrm/homacrm.php | awk '{print $3}')
 R=$(grep -m1 "^Stable tag:" homacrm/readme.txt | awk '{print $3}')

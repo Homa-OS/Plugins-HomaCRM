@@ -18,7 +18,7 @@ HomaCRM for WordPress is the official plugin of HomaCRM (HomaCRM, Negin Shahr-e 
 
 ### Requirements and install
 - WordPress 5.2 or newer, PHP 7.2 or newer; WooCommerce optional.
-- Download the zip from https://plugin.homacrm.com/ → WordPress admin → Plugins → Add New → Upload Plugin → Activate → open HomaCRM → Connection → paste the API token → Save. After activation the plugin opens its own settings page.
+- Get the zip link by email at https://plugin.homacrm.com/install (or build from GitHub) → WordPress admin → Plugins → Add New → Upload Plugin → Activate → open HomaCRM → Connection → paste the API token → Save. After activation the plugin opens its own settings page.
 - Get a token: sign up (free 15-day trial), then in the HomaCRM panel open User management → Tokens and copy the main token. See https://homacrm.com/api/v1/external/docs
 - Marketing SMS are sent only between 09:00 and 21:00 and the default text includes the opt-out phrase.
 - Cost: the plugin is free; SMS are paid from the SMS credit of your HomaCRM portal.
@@ -36,7 +36,7 @@ HomaCRM for WordPress is the official plugin of HomaCRM (HomaCRM, Negin Shahr-e 
 - انبار، فاکتور و درگاه پرداخت هما برای ووکامرس؛
 - به‌روزرسانی خودکار، REST و پشتیبانی MCP برای توسعه‌دهنده‌ها.
 
-پیش‌نیاز: وردپرس ۵٫۲ به بالا و PHP ۷٫۲ به بالا. نصب: فایل zip را از plugin.homacrm.com بگیرید، در «افزونه‌ها ← افزودن ← بارگذاری» نصب و فعال کنید، سپس در منوی HomaCRM توکن را بچسبانید. افزونه رایگان است و ۱۵ روز آزمایشی رایگان هما دارد؛ هزینهٔ پیامک از اعتبار پیامک پرتال شما کم می‌شود. پشتیبانی: support@homacrm.com
+پیش‌نیاز: وردپرس ۵٫۲ به بالا و PHP ۷٫۲ به بالا. نصب: ایمیلتان را در plugin.homacrm.com/install بنویسید تا لینک فایل zip را بگیرید، در «افزونه‌ها ← افزودن ← بارگذاری» نصب و فعال کنید، سپس در منوی HomaCRM توکن را بچسبانید. افزونه رایگان است و ۱۵ روز آزمایشی رایگان هما دارد؛ هزینهٔ پیامک از اعتبار پیامک پرتال شما کم می‌شود. پشتیبانی: support@homacrm.com
 
 ## FAQ
 - Does it replace other SMS or OTP login plugins? Yes — deactivate the old ones after setup; existing users sign in with the same mobile number.

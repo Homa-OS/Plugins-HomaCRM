@@ -33,7 +33,7 @@
 {"@context":"https://schema.org","@graph":[
 {"@type":"Organization","@id":"https://homacrm.com/#org","name":"HomaCRM","url":"https://homacrm.com/","logo":"https://plugin.homacrm.com/mark.svg","sameAs":["https://github.com/Homa-OS/Plugins-HomaCRM"],"contactPoint":{"@type":"ContactPoint","contactType":"customer support","email":"support@homacrm.com","availableLanguage":["fa","en"]}},
 {"@type":"WebSite","@id":"https://plugin.homacrm.com/#site","url":"https://plugin.homacrm.com/","name":"افزونه وردپرس HomaCRM","inLanguage":"fa-IR","publisher":{"@id":"https://homacrm.com/#org"}},
-{"@type":"SoftwareApplication","name":"افزونه پیامک و CRM وردپرس هما (HomaCRM)","alternateName":"HomaCRM — SMS & CRM Plugin for WordPress","applicationCategory":"BusinessApplication","applicationSubCategory":"WordPress plugin: SMS, OTP login, CRM, WooCommerce","operatingSystem":"WordPress 5.2+","softwareRequirements":"WordPress 5.2+, PHP 7.2+, WooCommerce optional","isAccessibleForFree":true,"license":"https://www.gnu.org/licenses/gpl-2.0.html","featureList":["SMS order notifications for WooCommerce","Login and signup with mobile OTP","Abandoned cart SMS reminders with one-tap restore","Back-in-stock SMS alerts","Birthday SMS with one-time coupon","Shipment tracking SMS and review requests","CRM contacts, deals, leads and support tickets sync","Warehouse inventory, invoices and payment gateway for WooCommerce","REST API, WordPress Abilities API and MCP support"],"author":{"@id":"https://homacrm.com/#org"},"softwareVersion":"{{VERSION}}","downloadUrl":"https://plugin.homacrm.com/homacrm-{{VERSION}}.zip","url":"https://plugin.homacrm.com/","image":"https://plugin.homacrm.com/og.png","description":"افزونه رسمی HomaCRM: پیامک خودکار سفارش، ورود و ثبت‌نام با موبایل، یادآوری سبد رهاشده و CRM برای ووکامرس.","inLanguage":"fa-IR","offers":{"@type":"Offer","price":"0","priceCurrency":"IRR","availability":"https://schema.org/InStock"},"publisher":{"@id":"https://homacrm.com/#org"}},
+{"@type":"SoftwareApplication","name":"افزونه پیامک و CRM وردپرس هما (HomaCRM)","alternateName":"HomaCRM — SMS & CRM Plugin for WordPress","applicationCategory":"BusinessApplication","applicationSubCategory":"WordPress plugin: SMS, OTP login, CRM, WooCommerce","operatingSystem":"WordPress 5.2+","softwareRequirements":"WordPress 5.2+, PHP 7.2+, WooCommerce optional","isAccessibleForFree":true,"license":"https://www.gnu.org/licenses/gpl-2.0.html","featureList":["SMS order notifications for WooCommerce","Login and signup with mobile OTP","Abandoned cart SMS reminders with one-tap restore","Back-in-stock SMS alerts","Birthday SMS with one-time coupon","Shipment tracking SMS and review requests","CRM contacts, deals, leads and support tickets sync","Warehouse inventory, invoices and payment gateway for WooCommerce","REST API, WordPress Abilities API and MCP support"],"author":{"@id":"https://homacrm.com/#org"},"softwareVersion":"{{VERSION}}","downloadUrl":"https://plugin.homacrm.com/install","url":"https://plugin.homacrm.com/","image":"https://plugin.homacrm.com/og.png","description":"افزونه رسمی HomaCRM: پیامک خودکار سفارش، ورود و ثبت‌نام با موبایل، یادآوری سبد رهاشده و CRM برای ووکامرس.","inLanguage":"fa-IR","offers":{"@type":"Offer","price":"0","priceCurrency":"IRR","availability":"https://schema.org/InStock"},"publisher":{"@id":"https://homacrm.com/#org"}},
 {"@type":"FAQPage","mainEntity":[
 {"@type":"Question","name":"افزونه پیامک وردپرس هما چه کاری می‌کند؟","acceptedAnswer":{"@type":"Answer","text":"پیامک خودکار ثبت، پرداخت و ارسال سفارش را می‌فرستد، ورود و ثبت‌نام با کد پیامکی را فعال می‌کند، سبد رهاشده را یادآوری می‌کند و مشتری‌ها و سفارش‌ها را در CRM هما ثبت می‌کند."}},
 {"@type":"Question","name":"توکن افزونه را از کجا بگیرم؟","acceptedAnswer":{"@type":"Answer","text":"بعد از نصب، در منوی HomaCRM دکمهٔ ثبت‌نام رایگان را بزنید؛ با شمارهٔ موبایل ثبت‌نام می‌کنید، توکن را کپی می‌کنید و در افزونه می‌چسبانید."}},
@@ -132,13 +132,7 @@ code{display:inline-block;max-width:100%;overflow-wrap:anywhere;font:600 13px ui
     <h1>افزونه <em>پیامک و CRM</em> وردپرس هما</h1>
     <p class="en" lang="en" dir="ltr">HomaCRM — SMS &amp; CRM Plugin for WordPress</p>
     <p class="lead">ورود با موبایل، پیامک خودکار و CRM برای وردپرس، با پشتیبانی کامل ووکامرس: سفارش، سبد رهاشده و پرداخت. فقط با یک توکن.</p>
-    <!--GATE_OFF--><a class="btn" id="dl" href="/homacrm-{{VERSION}}.zip" download="homacrm-{{VERSION}}.zip" target="_blank" rel="noopener"><svg class="ic" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0l-4.5-4.5M12 15l4.5-4.5"/><path d="M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg><span class="bt"><b>نصب افزونه</b><small lang="en" dir="ltr">Install Plugin</small></span></a><!--/GATE_OFF--><!--GATE_ON--><form class="lead" id="get" novalidate>
-      <label class="vh" for="le">ایمیل شما</label>
-      <div class="lrow"><input id="le" type="email" inputmode="email" autocomplete="email" dir="ltr" placeholder="you@example.com" required><button class="btn" type="submit" id="lb"><svg class="ic" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0l-4.5-4.5M12 15l4.5-4.5"/><path d="M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg><span class="bt"><b>نصب افزونه</b><small lang="en" dir="ltr">Install Plugin</small></span></button></div>
-      <input class="hp" type="text" id="lw" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
-      <p class="lhint">لینک نصب را به ایمیلتان می‌فرستیم. ایمیل فقط برای همین و اطلاع‌رسانی‌های مرتبط با افزونه استفاده می‌شود.</p>
-      <p class="lmsg" id="lmsg" role="status" aria-live="polite"></p>
-    </form><!--/GATE_ON-->
+    <a class="btn" id="dl" href="/install" rel="nofollow"><svg class="ic" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0l-4.5-4.5M12 15l4.5-4.5"/><path d="M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg><span class="bt"><b>دریافت افزونه</b><small lang="en" dir="ltr">Get the Plugin</small></span></a>
     <p class="meta"><span>۱۵ روز آزمایشی رایگان</span><span>توکن رایگان</span><span>نصب رایگان</span><span class="ltr">v{{VERSION}}</span></p>
     <div class="hand" id="hand" hidden>
       <p><b>روی رایانه نصب می‌کنید؟</b> پنل وردپرس را معمولاً با رایانه باز می‌کنید؛ لینک را برای خودتان بفرستید تا همان‌جا نصب کنید.</p>
@@ -162,7 +156,7 @@ code{display:inline-block;max-width:100%;overflow-wrap:anywhere;font:600 13px ui
 
   <section id="install" aria-labelledby="h-i">
     <h2 id="h-i">نصب در ۳ قدم</h2>
-    <ol class="steps"><!--GATE_OFF--><li><a class="btn btn-s" href="/homacrm-{{VERSION}}.zip" download="homacrm-{{VERSION}}.zip" target="_blank" rel="noopener">دانلود افزونه</a></li><!--/GATE_OFF--><!--GATE_ON--><li><a class="btn btn-s" href="#get">ایمیلتان را بنویسید و لینک را بگیرید</a></li><!--/GATE_ON--><li>وردپرس: افزونه‌ها ← افزودن ← بارگذاری</li><li>منوی HomaCRM: دریافت توکن رایگان</li></ol>
+    <ol class="steps"><li><a class="btn btn-s" href="/install" rel="nofollow">دریافت افزونه</a></li><li>وردپرس: افزونه‌ها ← افزودن ← بارگذاری</li><li>منوی HomaCRM: دریافت توکن رایگان</li></ol>
   </section>
 
   <section id="faq" aria-labelledby="h-q">
@@ -254,18 +248,7 @@ code{display:inline-block;max-width:100%;overflow-wrap:anywhere;font:600 13px ui
   addEventListener('pagehide',function(){send('leave',{secs:Math.round((Date.now()-t0)/1000),maxScroll:maxS})});
 })();
 </script>
-<!--GATE_ON--><script>
-(function(){var f=document.getElementById('get');if(!f)return;var t0=Date.now(),q=new URLSearchParams(location.search),msg=document.getElementById('lmsg'),b=document.getElementById('lb');
-f.addEventListener('submit',function(e){e.preventDefault();var em=document.getElementById('le').value.trim();msg.className='lmsg';
- if(!/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(em)){msg.textContent='ایمیل معتبر نیست.';msg.className='lmsg bad';return}
- b.disabled=true;msg.textContent='در حال ارسال…';
- fetch('/api/lead',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:em,website:document.getElementById('lw').value,dt:Date.now()-t0,us:q.get('utm_source')||'',um:q.get('utm_medium')||'',uc:q.get('utm_campaign')||'',ref:document.referrer||'',lang:navigator.language||''})})
- .then(function(r){return r.json().then(function(j){return[r.status,j]})}).then(function(a){var st=a[0],j=a[1];
-  if(j.ok){msg.textContent='✓ لینک نصب به '+em+' فرستاده می‌شود؛ چند دقیقهٔ دیگر ایمیلتان (و پوشهٔ اسپم) را ببینید.';msg.className='lmsg ok';f.querySelector('.lrow').style.display='none'}
-  else if(st==429){msg.textContent='درخواست‌ها زیاد است؛ کمی بعد دوباره امتحان کنید.';msg.className='lmsg bad';b.disabled=false}
-  else{msg.textContent='ایمیل معتبر نیست یا ارسال ممکن نشد.';msg.className='lmsg bad';b.disabled=false}})
- .catch(function(){msg.textContent='ارتباط برقرار نشد؛ دوباره امتحان کنید.';msg.className='lmsg bad';b.disabled=false})})
-})();
-</script><!--/GATE_ON-->
+
+<script>(function(){var q=location.search;if(!q)return;document.querySelectorAll('a[href="/install"]').forEach(function(a){a.href='/install'+q})})()</script>
 </body>
 </html>

@@ -48,10 +48,17 @@ add_action(
 	}
 );
 
-register_activation_hook( __FILE__, array( 'HomaCRM\\Log', 'install' ) );
+register_activation_hook(
+	__FILE__,
+	static function () {
+		HomaCRM\Log::install();
+		HomaCRM\Telemetry::activated();
+	}
+);
 register_deactivation_hook(
 	__FILE__,
 	static function () {
+		HomaCRM\Telemetry::deactivated();
 		wp_clear_scheduled_hook( 'homacrm_daily' );
 	}
 );

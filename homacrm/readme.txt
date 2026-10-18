@@ -31,6 +31,10 @@ License URI: https://www.gnu.org/licenses/gpl-2.0.html
 4. در زبانه‌های «ورود با پیامک»، «ووکامرس» و «CRM و فرم‌ها» هر بخشی را که لازم دارید روشن کنید.
 5. از «ابزارها و گزارش» یک پیامکِ آزمایشی بفرستید.
 
+== Privacy ==
+
+For support, the plugin sends a short notice to https://plugin.homacrm.com when it is activated or deactivated and once a day: site address and name, admin email, plugin/WordPress/WooCommerce/PHP versions, locale, whether a HomaCRM token is connected, and the portal code.
+
 == Frequently Asked Questions ==
 
 = آیا جای افزونه‌های قدیمیِ پیامکِ ووکامرس و Digits را می‌گیرد؟ =

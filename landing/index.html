@@ -62,7 +62,11 @@ h1{font-size:clamp(28px,6vw,46px);line-height:1.4;margin:0 0 14px;font-weight:90
 h1 em{font-style:normal;color:var(--teal)}
 .en{margin:-4px 0 14px;font:600 clamp(14px,2.4vw,17px) Arial,Helvetica,sans-serif;color:var(--teal-d);letter-spacing:.2px}
 .lead{font-size:clamp(15px,2.4vw,18px);color:var(--muted);margin:0 auto 26px;max-width:560px;text-wrap:balance}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--teal);color:#fff;font-weight:800;font-size:18px;padding:15px 34px;border-radius:14px;text-decoration:none;box-shadow:0 8px 22px rgba(0,170,176,.28);transition:background .15s,transform .15s}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:12px;background:var(--teal);color:#fff;font-weight:800;font-size:18px;padding:12px 30px;border-radius:14px;text-decoration:none;box-shadow:0 8px 22px rgba(0,170,176,.28);transition:background .15s,transform .15s}
+.btn .bt{display:flex;flex-direction:column;align-items:flex-start;line-height:1.35;text-align:right}
+.btn .bt b{font-size:19px;font-weight:800}
+.btn .bt small{font:600 12px Arial,Helvetica,sans-serif;letter-spacing:.6px;opacity:.9}
+.btn .ic{flex:none}
 .btn:hover{background:var(--teal-d);transform:translateY(-1px)}
 .btn-s{font-size:14px;padding:6px 16px;border-radius:10px;box-shadow:none}.btn:focus-visible,nav a:focus-visible,summary:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
 .meta{margin:14px 0 0;font-size:13px;color:var(--muted)}
@@ -113,7 +117,7 @@ code{display:inline-block;max-width:100%;overflow-wrap:anywhere;font:600 13px ui
     <h1>افزونه <em>پیامک و CRM</em> وردپرس هما</h1>
     <p class="en" lang="en" dir="ltr">HomaCRM — SMS &amp; CRM Plugin for WordPress</p>
     <p class="lead">ورود با موبایل، پیامک خودکار و CRM برای وردپرس، با پشتیبانی کامل ووکامرس: سفارش، سبد رهاشده و پرداخت. فقط با یک توکن.</p>
-    <a class="btn" id="dl" href="/homacrm-{{VERSION}}.zip" download="homacrm-{{VERSION}}.zip" target="_blank" rel="noopener">نصب رایگان افزونه</a>
+    <a class="btn" id="dl" href="/homacrm-{{VERSION}}.zip" download="homacrm-{{VERSION}}.zip" target="_blank" rel="noopener"><svg class="ic" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0l-4.5-4.5M12 15l4.5-4.5"/><path d="M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg><span class="bt"><b>نصب افزونه</b><small lang="en" dir="ltr">Install Plugin</small></span></a>
     <p class="meta"><span>۱۵ روز آزمایشی رایگان</span><span>۱۰۰ هزار تومان شارژ اولیه</span><span>توکن و نصب رایگان</span><span class="ltr">v{{VERSION}}</span></p>
   </div>
 

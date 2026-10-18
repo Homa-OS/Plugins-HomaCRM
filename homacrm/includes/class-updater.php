@@ -43,7 +43,7 @@ final class Updater {
 			$j = json_decode( wp_remote_retrieve_body( $res ), true );
 			$zip = '';
 			foreach ( (array) ( $j['assets'] ?? array() ) as $a ) {
-				if ( 'homacrm.zip' === ( $a['name'] ?? '' ) ) {
+				if ( preg_match( '/^homacrm(-[0-9.]+)?\.zip$/i', (string) ( $a['name'] ?? '' ) ) ) {
 					$zip = (string) $a['browser_download_url'];
 				}
 			}

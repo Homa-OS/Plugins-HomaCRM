@@ -37,6 +37,8 @@
 {"@type":"Question","name":"توکن افزونه را از کجا بگیرم؟","acceptedAnswer":{"@type":"Answer","text":"بعد از نصب، در منوی HomaCRM دکمهٔ ثبت‌نام رایگان را بزنید؛ با شمارهٔ موبایل ثبت‌نام می‌کنید، توکن را کپی می‌کنید و در افزونه می‌چسبانید."}},
 {"@type":"Question","name":"با کدام نسخهٔ وردپرس و ووکامرس سازگار است؟","acceptedAnswer":{"@type":"Answer","text":"وردپرس ۵.۲ به بالا و PHP ۷.۲ به بالا؛ با ووکامرس و ووکامرس فارسی سازگار است."}},
 {"@type":"Question","name":"چطور با پشتیبانی تماس بگیرم؟","acceptedAnswer":{"@type":"Answer","text":"با ایمیل support@homacrm.com؛ برای نصب، توکن و هر پرسشی."}},
+{"@type":"Question","name":"آیا جایگزین Digits می‌شود؟","acceptedAnswer":{"@type":"Answer","text":"بله؛ ورود و ثبت‌نام با کد پیامکی را در صفحهٔ ورود وردپرس، حساب کاربری و تسویه‌حساب ووکامرس فعال می‌کند و کاربران قبلی با همان موبایل وارد می‌شوند."}},
+{"@type":"Question","name":"درگاه پرداخت هم دارد؟","acceptedAnswer":{"@type":"Answer","text":"بله؛ درگاه پرداخت هما برای ووکامرس سفارش را پیش از پرداخت فاکتور می‌کند و فقط وقتی دریافت کامل روی فاکتور ثبت شده باشد آن را پرداخت‌شده می‌کند."}},
 {"@type":"Question","name":"هزینهٔ افزونه چقدر است؟","acceptedAnswer":{"@type":"Answer","text":"خود افزونه رایگان است و ۱۵ روز آزمایشی رایگان هما همراهش است. با اولین اتصال افزونه از داخل وردپرس ۱۰۰ هزار تومان شارژ اولیهٔ پیامک هم به پرتال شما هدیه داده می‌شود (یک بار برای هر موبایل و هر سایت)؛ هزینهٔ پیامک‌ها از همین اعتبار کم می‌شود."}}]}
 ]}
 </script>
@@ -81,6 +83,20 @@ footer{padding:26px 0 30px;margin-top:36px;border-top:1px solid var(--line);font
 footer .w{display:flex;flex-wrap:wrap;gap:8px 18px;justify-content:space-between;align-items:center}
 footer nav{gap:14px;font-size:13px}
 .ltr{direction:ltr;unicode-bidi:embed}
+
+.blk{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.blk article{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+h3{font-size:16px;margin:0 0 4px;font-weight:800}
+.blk p,.prose p{margin:0;color:var(--muted);font-size:14px}
+.prose{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-top:12px}
+.prose p+p{margin-top:8px}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:#fff}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{padding:10px 14px;text-align:right;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child th,tr:last-child td{border-bottom:0}
+th{width:34%;color:var(--muted);font-weight:700;background:#f6f8fa}
+code{font:600 13px ui-monospace,Menlo,Consolas,monospace;direction:ltr;unicode-bidi:embed;background:#f1f4f6;border-radius:6px;padding:1px 6px}
+@media(max-width:560px){.blk{grid-template-columns:1fr}th{width:38%}}
 @media(max-width:560px){.feat{grid-template-columns:1fr}.btn{width:100%}nav{gap:12px;font-size:13px}header .w{flex-wrap:wrap;justify-content:center}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn{transition:none}}
 </style>
@@ -89,7 +105,7 @@ footer nav{gap:14px;font-size:13px}
 <div class="stripe"></div>
 <header><div class="w">
   <a class="brand" href="/" aria-label="HomaCRM"><img src="/mark.svg" width="30" height="30" alt="">HomaCRM</a>
-  <nav aria-label="منوی اصلی"><a href="#features">امکانات</a><a href="#install">نصب</a><a href="#faq">پرسش‌ها</a><a href="https://homacrm.com/?utm_source=plugin-landing&amp;utm_medium=nav" target="_blank" rel="noopener">HomaCRM</a></nav>
+  <nav aria-label="منوی اصلی"><a href="#features">امکانات</a><a href="#install">نصب</a><a href="#faq">پرسش‌ها</a><a href="#specs">مشخصات</a><a href="https://homacrm.com/?utm_source=plugin-landing&amp;utm_medium=nav" target="_blank" rel="noopener">HomaCRM</a></nav>
 </div></header>
 
 <main class="w">
@@ -121,7 +137,51 @@ footer nav{gap:14px;font-size:13px}
     <details><summary>توکن را از کجا بگیرم؟</summary><p>بعد از نصب، در منوی HomaCRM دکمهٔ ثبت‌نام رایگان را بزنید؛ با شمارهٔ موبایل ثبت‌نام کنید، توکن را کپی و در افزونه بچسبانید.</p></details>
     <details><summary>با کدام نسخهٔ وردپرس و ووکامرس سازگار است؟</summary><p>وردپرس ۵.۲ به بالا و PHP ۷.۲ به بالا؛ با ووکامرس و ووکامرس فارسی سازگار است.</p></details>
     <details><summary>پشتیبانی و تماس؟</summary><p>برای پشتیبانی، نصب و هر پرسشی به <a class="ltr" href="mailto:support@homacrm.com">support@homacrm.com</a> ایمیل بزنید.</p></details>
+    <details><summary>آیا جایگزین Digits می‌شود؟</summary><p>بله؛ ورود و ثبت‌نام با کد پیامکی را در صفحهٔ ورود وردپرس، حساب کاربری و تسویه‌حساب ووکامرس فعال می‌کند و کاربران قبلی با همان موبایل وارد می‌شوند.</p></details>
+    <details><summary>درگاه پرداخت هم دارد؟</summary><p>بله؛ درگاه پرداخت هما برای ووکامرس: سفارش پیش از پرداخت فاکتور می‌شود و فقط وقتی «پرداخت‌شده» است که دریافت کامل روی همان فاکتور ثبت شده باشد.</p></details>
     <details><summary>هزینه چقدر است؟ شارژ اولیه چیست؟</summary><p>افزونه رایگان است و ۱۵ روز آزمایشی رایگان هما همراهش است. هزینهٔ پیامک‌ها از اعتبار پیامک پرتال شما کم می‌شود و با اولین اتصال افزونه از داخل وردپرس، ۱۰۰ هزار تومان شارژ اولیهٔ پیامک به همان پرتال هدیه داده می‌شود. این هدیه برای هر موبایل و هر سایت یک بار است و مدت‌دار است.</p></details>
+  </section>
+
+  <section id="details" aria-labelledby="h-d">
+    <h2 id="h-d">امکانات و مزایای افزونه پیامک وردپرس هما</h2>
+    <div class="blk">
+      <article><h3>ورود و ثبت‌نام با موبایل</h3><p>مشتری فقط شماره‌اش را می‌نویسد و کد پیامکی می‌گیرد؛ بدون رمز و بدون فراموشی رمز. روی صفحهٔ ورود وردپرس، حساب کاربری و تسویه‌حساب ووکامرس و هر جای دلخواه با کد کوتاه کار می‌کند. جایگزین مستقیم افزونه Digits است و کاربران قبلی با همان موبایل وارد می‌شوند.</p></article>
+      <article><h3>پیامک خودکار سفارش ووکامرس</h3><p>برای هر وضعیت سفارش (ثبت، در حال انجام، ارسال، لغو، مرجوعی) متن جدا بنویسید و پیامک سفارش تازه را به مدیران هم بفرستید. با HPOS ووکامرس سازگار است و متن‌ها با متغیرهایی مثل نام، شماره سفارش و مبلغ پر می‌شوند.</p></article>
+      <article><h3>بازگرداندن سبد خرید رهاشده</h3><p>مشتری‌ای که سبدش را رها کرده یک یادآوری پیامکی می‌گیرد که با یک لمس او را به همان سبد برمی‌گرداند. زمان یادآوری و متن پیامک را خودتان تعیین می‌کنید.</p></article>
+      <article><h3>موجود شد خبرم کن</h3><p>بازدیدکننده روی کالای ناموجود شماره‌اش را می‌گذارد و به‌محض موجود شدن کالا پیامک می‌گیرد؛ فروشی که قبلاً از دست می‌رفت.</p></article>
+      <article><h3>تبریک تولد، رهگیری و نظرسنجی</h3><p>تبریک تولد با کد تخفیف یک‌بارمصرف، پیامک کد رهگیری مرسوله، و درخواست نظر چند روز بعد از تکمیل سفارش؛ همگی قابل روشن و خاموش‌کردن جدا.</p></article>
+      <article><h3>CRM هما برای فروشگاه شما</h3><p>خریدار یا کاربر تازه خودکار «مخاطب» می‌شود و هر سفارش «معامله» در قیف فروش هما؛ فرم تماس و Contact Form 7 هم سرنخ یا تیکت پشتیبانی می‌سازد. همهٔ مشتری‌ها یک‌جا، در پنل هما.</p></article>
+      <article><h3>انبار، فاکتور و درگاه پرداخت</h3><p>قیمت و موجودی کالاها از انبار هما می‌آید، سفارش پرداخت‌شده فاکتور فروش و دریافت می‌شود، و درگاه پرداخت هما فقط وقتی سفارش را «پرداخت‌شده» می‌کند که مبلغ کامل روی فاکتور ثبت شده باشد.</p></article>
+      <article><h3>یک توکن برای همه چیز</h3><p>نه نام کاربری و رمز پنل پیامک، نه چند افزونه جدا: یک توکن API هما همهٔ بخش‌ها را وصل می‌کند و اعتبار پیامک و وضعیت اتصال را در همان صفحه نشان می‌دهد.</p></article>
+    </div>
+  </section>
+
+  <section id="specs" aria-labelledby="h-s">
+    <h2 id="h-s">مشخصات فنی افزونه</h2>
+    <div class="tw"><table>
+      <tr><th>نام افزونه</th><td>HomaCRM — هما برای وردپرس و ووکامرس</td></tr>
+      <tr><th>نسخه</th><td class="ltr">v{{VERSION}} (همیشه برابر نسخهٔ زندهٔ هما)</td></tr>
+      <tr><th>پیش‌نیاز</th><td>وردپرس ۵٫۲ به بالا · PHP ۷٫۲ به بالا · ووکامرس اختیاری (سازگار با HPOS و ووکامرس فارسی)</td></tr>
+      <tr><th>اتصال</th><td>فقط با توکن API هما (<code>https://homacrm.com/api/v1/external</code>)</td></tr>
+      <tr><th>مجوز</th><td>GPLv2 یا بالاتر · متن‌باز در <a href="https://github.com/Homa-OS/Plugins-HomaCRM" target="_blank" rel="noopener">GitHub</a></td></tr>
+      <tr><th>به‌روزرسانی</th><td>از GitHub Releases؛ اعلان در پیشخوان، به‌روزرسانی یک‌کلیکی یا خودکار، ایمیل و پیامک اختیاری به مدیر سایت</td></tr>
+      <tr><th>کدهای کوتاه</th><td><code>[homacrm_login]</code> فرم ورود با پیامک · <code>[homacrm_form]</code> فرم سرنخ یا تیکت</td></tr>
+      <tr><th>رابط‌های توسعه</th><td>هوک‌های <code>homacrm_send_sms</code> و <code>homacrm_sms_sent</code> و …، REST در <code>/wp-json/homacrm/v1</code>، Abilities API وردپرس و سرور MCP هما</td></tr>
+      <tr><th>ساعت پیامک تبلیغاتی</th><td>فقط ۹ صبح تا ۹ شب، با عبارت لغو در متن پیش‌فرض</td></tr>
+    </table></div>
+  </section>
+
+  <section id="security" aria-labelledby="h-sec">
+    <h2 id="h-sec">امنیت و حریم خصوصی</h2>
+    <div class="prose">
+      <p>توکن در گزینهٔ جدا ذخیره می‌شود و هرگز در فرم، لاگ یا خروجی نمایش داده نمی‌شود. کد ورود فقط به‌صورت امضاشده و کوتاه‌عمر نگه‌داری می‌شود و پنج تلاش اشتباه آن را باطل می‌کند. برای هر موبایل در دقیقه یک کد و در ساعت پنج کد، و برای هر IP در ساعت ۱۵ درخواست مجاز است. لاگ پیامک شماره را پوشانده نشان می‌دهد، متن کد ورود را ذخیره نمی‌کند و بعد از ۳۰ روز پاک می‌شود.</p>
+      <p>تأیید پرداخت هرگز به پارامترهای بازگشت از درگاه تکیه نمی‌کند و فقط از روی دریافت ثبت‌شده در هما انجام می‌شود. برای پشتیبانی، افزونه هنگام فعال‌شدن، غیرفعال‌شدن و روزی یک بار نشانی و نام سایت، ایمیل مدیر، نسخه‌ها، وصل‌بودن توکن (نه خود توکن) و کد پرتال را به هما می‌فرستد؛ مشتری‌ها، سفارش‌ها و محتوای سایت هرگز.</p>
+    </div>
+  </section>
+
+  <section id="migrate" aria-labelledby="h-m">
+    <h2 id="h-m">جایگزین Digits و افزونه‌های پیامک قدیمی</h2>
+    <div class="prose"><p>اگر تا امروز با Digits یا «پیامک حرفه‌ای ووکامرس» کار می‌کردید، بعد از اتصال هما آن‌ها را غیرفعال کنید. کاربران Digits و مشتری‌های ووکامرس با همان شماره موبایل قبلی وارد می‌شوند و نیازی به ثبت‌نام دوباره نیست.</p></div>
   </section>
 </main>
 

@@ -71,6 +71,7 @@ final class Telemetry {
 			'token'  => '' !== $token ? 1 : 0,
 			'portal' => $portal,
 			'id'     => self::site_id(),
+			'lead'   => self::lead(),
 		);
 		wp_remote_post(
 			self::URL,
@@ -81,6 +82,16 @@ final class Telemetry {
 				'headers'  => array( 'User-Agent' => 'HomaCRM-WordPress/' . HOMACRM_VERSION . '; ' . home_url() ),
 			)
 		);
+	}
+
+	/** اگر افزونه از لینکِ ایمیلیِ لندینگ آمده باشد، یک شناسهٔ تصادفیِ لید در lead.txt هست (نه ایمیل). */
+	private static function lead() {
+		$f = HOMACRM_DIR . 'lead.txt';
+		if ( ! is_readable( $f ) ) {
+			return '';
+		}
+		$v = trim( (string) file_get_contents( $f ) );
+		return preg_match( '/^[a-f0-9]{16}$/', $v ) ? $v : '';
 	}
 
 	/** شناسهٔ ثابت و بی‌معنای این نصب، تا تغییرِ دامنه نصبِ تازه حساب نشود. */

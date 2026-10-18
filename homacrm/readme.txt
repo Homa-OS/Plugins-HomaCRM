@@ -1,9 +1,9 @@
 === HomaCRM — هما ===
 Contributors: homacrm
 Tags: sms, otp, woocommerce, crm, پیامک
-Requires at least: 6.0
+Requires at least: 5.2
 Tested up to: 6.8
-Requires PHP: 7.4
+Requires PHP: 7.2
 Stable tag: 3.13.11
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html

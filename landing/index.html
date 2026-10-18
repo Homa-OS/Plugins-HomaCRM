@@ -7,6 +7,8 @@
 <meta name="description" content="افزونه پیامک و CRM وردپرس هما (HomaCRM): ورود و ثبت‌نام با موبایل، فرم و CRM برای وردپرس، و پیامک سفارش، سبد رهاشده و درگاه برای ووکامرس. نصب رایگان و ۱۵ روز آزمایشی رایگان.">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
 <link rel="canonical" href="https://plugin.homacrm.com/">
+<link rel="alternate" type="text/markdown" href="/llms-full.txt" title="Full content as Markdown for AI assistants">
+<link rel="alternate" type="text/plain" href="/llms.txt" title="llms.txt">
 <link rel="alternate" hreflang="fa-IR" href="https://plugin.homacrm.com/">
 <link rel="alternate" hreflang="x-default" href="https://plugin.homacrm.com/">
 <meta name="theme-color" content="#00AAB0">
@@ -31,7 +33,7 @@
 {"@context":"https://schema.org","@graph":[
 {"@type":"Organization","@id":"https://homacrm.com/#org","name":"HomaCRM","url":"https://homacrm.com/","logo":"https://plugin.homacrm.com/mark.svg","sameAs":["https://github.com/Homa-OS/Plugins-HomaCRM"],"contactPoint":{"@type":"ContactPoint","contactType":"customer support","email":"support@homacrm.com","availableLanguage":["fa","en"]}},
 {"@type":"WebSite","@id":"https://plugin.homacrm.com/#site","url":"https://plugin.homacrm.com/","name":"افزونه وردپرس HomaCRM","inLanguage":"fa-IR","publisher":{"@id":"https://homacrm.com/#org"}},
-{"@type":"SoftwareApplication","name":"افزونه پیامک و CRM وردپرس هما (HomaCRM)","alternateName":"HomaCRM — SMS & CRM Plugin for WordPress","applicationCategory":"BusinessApplication","operatingSystem":"WordPress 5.2+","softwareVersion":"{{VERSION}}","downloadUrl":"https://plugin.homacrm.com/homacrm-{{VERSION}}.zip","url":"https://plugin.homacrm.com/","image":"https://plugin.homacrm.com/og.png","description":"افزونه رسمی HomaCRM: پیامک خودکار سفارش، ورود و ثبت‌نام با موبایل، یادآوری سبد رهاشده و CRM برای ووکامرس.","inLanguage":"fa-IR","offers":{"@type":"Offer","price":"0","priceCurrency":"IRR","availability":"https://schema.org/InStock"},"publisher":{"@id":"https://homacrm.com/#org"}},
+{"@type":"SoftwareApplication","name":"افزونه پیامک و CRM وردپرس هما (HomaCRM)","alternateName":"HomaCRM — SMS & CRM Plugin for WordPress","applicationCategory":"BusinessApplication","applicationSubCategory":"WordPress plugin: SMS, OTP login, CRM, WooCommerce","operatingSystem":"WordPress 5.2+","softwareRequirements":"WordPress 5.2+, PHP 7.2+, WooCommerce optional","isAccessibleForFree":true,"license":"https://www.gnu.org/licenses/gpl-2.0.html","featureList":["SMS order notifications for WooCommerce","Login and signup with mobile OTP","Abandoned cart SMS reminders with one-tap restore","Back-in-stock SMS alerts","Birthday SMS with one-time coupon","Shipment tracking SMS and review requests","CRM contacts, deals, leads and support tickets sync","Warehouse inventory, invoices and payment gateway for WooCommerce","REST API, WordPress Abilities API and MCP support"],"author":{"@id":"https://homacrm.com/#org"},"softwareVersion":"{{VERSION}}","downloadUrl":"https://plugin.homacrm.com/homacrm-{{VERSION}}.zip","url":"https://plugin.homacrm.com/","image":"https://plugin.homacrm.com/og.png","description":"افزونه رسمی HomaCRM: پیامک خودکار سفارش، ورود و ثبت‌نام با موبایل، یادآوری سبد رهاشده و CRM برای ووکامرس.","inLanguage":"fa-IR","offers":{"@type":"Offer","price":"0","priceCurrency":"IRR","availability":"https://schema.org/InStock"},"publisher":{"@id":"https://homacrm.com/#org"}},
 {"@type":"FAQPage","mainEntity":[
 {"@type":"Question","name":"افزونه پیامک وردپرس هما چه کاری می‌کند؟","acceptedAnswer":{"@type":"Answer","text":"پیامک خودکار ثبت، پرداخت و ارسال سفارش را می‌فرستد، ورود و ثبت‌نام با کد پیامکی را فعال می‌کند، سبد رهاشده را یادآوری می‌کند و مشتری‌ها و سفارش‌ها را در CRM هما ثبت می‌کند."}},
 {"@type":"Question","name":"توکن افزونه را از کجا بگیرم؟","acceptedAnswer":{"@type":"Answer","text":"بعد از نصب، در منوی HomaCRM دکمهٔ ثبت‌نام رایگان را بزنید؛ با شمارهٔ موبایل ثبت‌نام می‌کنید، توکن را کپی می‌کنید و در افزونه می‌چسبانید."}},
@@ -203,10 +205,16 @@ code{display:inline-block;max-width:100%;overflow-wrap:anywhere;font:600 13px ui
     <h2 id="h-m">مهاجرت از افزونهٔ ورود و پیامک قبلی</h2>
     <div class="prose"><p>اگر تا امروز افزونهٔ دیگری برای پیامک یا ورود با موبایل داشتید، بعد از اتصال هما آن را غیرفعال کنید. کاربران قبلی سایت و مشتری‌های ووکامرس با همان شماره موبایل وارد می‌شوند و نیازی به ثبت‌نام دوباره نیست.</p></div>
   </section>
+
+  <section id="en" lang="en" dir="ltr" aria-labelledby="h-en">
+    <h2 id="h-en">HomaCRM for WordPress — in short</h2>
+    <div class="prose"><p><b>HomaCRM</b> is a free WordPress and WooCommerce plugin by HomaCRM (Negin Shahr-e Novin Technologies) that connects a site to HomaCRM with a single API token. It sends order SMS, adds passwordless login and signup with a mobile one-time code, recovers abandoned carts by SMS, sends back-in-stock, birthday, tracking and review SMS, and syncs customers, orders, leads and support tickets with the HomaCRM CRM. For WooCommerce it can also read prices and stock from the HomaCRM warehouse, create sales invoices and take payments through the HomaCRM payment gateway.</p>
+    <p><b>Requirements:</b> WordPress 5.2+, PHP 7.2+, WooCommerce optional (HPOS compatible). <b>Licence:</b> GPLv2 or later. <b>Install:</b> download the zip, upload it in Plugins → Add New → Upload, then paste the API token under HomaCRM → Connection. A free 15-day trial of HomaCRM is available. <b>Source and docs:</b> <a href="https://github.com/Homa-OS/Plugins-HomaCRM" target="_blank" rel="noopener">GitHub</a> · <a href="https://homacrm.com/api/v1/external/docs" target="_blank" rel="noopener">API docs</a> · <a href="/llms-full.txt">llms-full.txt</a>.</p></div>
+  </section>
 </main>
 
 <footer><div class="w">
-  <span>© HomaCRM · فناوران نگین شهر نوین</span>
+  <span>© HomaCRM · فناوران نگین شهر نوین<br><small style="opacity:.8">برای بهبود، منبع بازدید (مثل پیام‌رسان یا موتور جست‌وجو) و شهر تقریبی ثبت می‌شود؛ هویت شما نه.</small></span>
   <nav aria-label="پیوندهای پایین"><a class="ltr" href="mailto:support@homacrm.com">support@homacrm.com</a><a href="https://homacrm.com/?utm_source=plugin-landing&amp;utm_medium=footer" target="_blank" rel="noopener">HomaCRM</a><a href="https://github.com/Homa-OS/Plugins-HomaCRM" target="_blank" rel="noopener">GitHub</a><a href="https://homacrm.com/register?utm_source=plugin-landing&amp;utm_medium=footer" target="_blank" rel="noopener">ثبت‌نام در HomaCRM</a></nav>
 </div></footer>
 <script>
@@ -221,6 +229,17 @@ code{display:inline-block;max-width:100%;overflow-wrap:anywhere;font:600 13px ui
     else{say(u)}
   });
   if(navigator.share){var b=document.getElementById('h-share');b.hidden=false;b.addEventListener('click',function(){navigator.share({title:t,url:u}).catch(function(){})})}
+})();
+</script>
+<script>
+(function(){
+  var t0=Date.now(),maxS=0,sent={};
+  function send(e,x){try{var d=JSON.stringify(Object.assign({e:e,p:location.pathname,q:location.search.slice(0,200),r:(document.referrer||'').slice(0,300),l:navigator.language,tz:(Intl.DateTimeFormat().resolvedOptions().timeZone||''),w:innerWidth,h:innerHeight,sw:screen.width,sh:screen.height,dpr:window.devicePixelRatio||1,ua:navigator.userAgent.slice(0,300),touch:navigator.maxTouchPoints||0},x||{}));
+    if(navigator.sendBeacon){navigator.sendBeacon('/t',d)}else{fetch('/t',{method:'POST',body:d,keepalive:true})}}catch(_){}}
+  send('view');
+  document.addEventListener('click',function(ev){var a=ev.target.closest&&ev.target.closest('a,button');if(!a)return;var id=a.id||a.getAttribute('href')||a.textContent.trim().slice(0,30);send('click',{id:String(id).slice(0,80)})},true);
+  addEventListener('scroll',function(){var s=Math.round((scrollY+innerHeight)/document.documentElement.scrollHeight*100);if(s>maxS)maxS=s;[50,90].forEach(function(m){if(maxS>=m&&!sent[m]){sent[m]=1;send('scroll',{d:m})}})},{passive:true});
+  addEventListener('pagehide',function(){send('leave',{secs:Math.round((Date.now()-t0)/1000),maxScroll:maxS})});
 })();
 </script>
 </body>

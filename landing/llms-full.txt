@@ -1,0 +1,45 @@
+# HomaCRM for WordPress — full content
+
+Source: https://plugin.homacrm.com/ · Updated automatically with every release · License: GPLv2 or later
+
+## What it is (English)
+HomaCRM for WordPress is the official plugin of HomaCRM (HomaCRM, Negin Shahr-e Novin Technologies, an Iranian CRM and messaging platform with about 18 years of history). One plugin and one API token add SMS notifications, passwordless mobile login, marketing SMS, CRM sync, and — for WooCommerce stores — warehouse, invoices and a payment gateway.
+
+### Features
+- SMS for every WooCommerce order status (placed, processing, completed, cancelled, refunded) to the customer, plus a new-order SMS to administrators. Templates support {name} {order} {total} {status} {site} {mobile} {tracking}. HPOS compatible.
+- Login and signup with a mobile one-time code on wp-login.php, the WooCommerce My Account page and checkout, or anywhere with the [homacrm_login] shortcode. Existing users are matched by their saved mobile number.
+- Abandoned-cart recovery: two SMS reminders with a one-tap link that restores the cart.
+- Back-in-stock alerts, birthday SMS with a one-time discount code, shipment tracking-code SMS, and review requests a few days after an order is completed.
+- CRM sync: buyers and new users become contacts, orders become deals in a pipeline, and the [homacrm_form] shortcode and Contact Form 7 create leads or support tickets.
+- WooCommerce shop integration: product price and stock from the HomaCRM warehouse every 15 minutes with live stock before payment; paid orders become sales invoices with receipts; payment de-duplication; optional separate token for the warehouse.
+- Payment gateway "homacrm_pay": an order is invoiced before payment and is marked paid only when the full amount is registered on that invoice in HomaCRM — the browser return from the gateway is never trusted on its own.
+- Automatic updates from GitHub Releases with admin notice, one-click or automatic install, and email/SMS notice to the site admin.
+- Developer interfaces: action hook homacrm_send_sms, filters and actions (homacrm_sms_message, homacrm_sms_sent, homacrm_user_registered, homacrm_login_redirect, homacrm_form_submitted), REST under /wp-json/homacrm/v1 (status, sms, lead), WordPress Abilities API (homacrm/send-sms, homacrm/credit, homacrm/create-lead) and the HomaCRM MCP server.
+
+### Requirements and install
+- WordPress 5.2 or newer, PHP 7.2 or newer; WooCommerce optional.
+- Download the zip from https://plugin.homacrm.com/ → WordPress admin → Plugins → Add New → Upload Plugin → Activate → open HomaCRM → Connection → paste the API token → Save. After activation the plugin opens its own settings page.
+- Get a token: sign up (free 15-day trial), then in the HomaCRM panel open User management → Tokens and copy the main token. See https://homacrm.com/api/v1/external/docs
+- Marketing SMS are sent only between 09:00 and 21:00 and the default text includes the opt-out phrase.
+- Cost: the plugin is free; SMS are paid from the SMS credit of your HomaCRM portal.
+
+### Security and privacy
+- The token is stored in a separate non-autoloaded option and never printed. Login codes are stored only as short-lived HMACs; 5 wrong attempts invalidate a code; each mobile gets 1 code per 60 s and 5 per hour; each IP 15 requests per hour. SMS logs mask numbers and are purged after 30 days.
+- For support the plugin sends a short notice to plugin.homacrm.com on activation, deactivation, update, first settings view, token save and once a day: site URL and name, admin email, plugin/WordPress/WooCommerce/PHP versions, locale, whether a token is connected (not the token), portal code and a random install id. No customers, orders or content are sent.
+
+## معرفی (فارسی)
+افزونهٔ پیامک و CRM وردپرس هما (HomaCRM) افزونهٔ رسمی و رایگان هما برای وردپرس و ووکامرس است. با یک توکن API این‌ها را فعال می‌کنید:
+- پیامک خودکار سفارش ووکامرس (ثبت، پرداخت، ارسال، لغو، مرجوعی) برای مشتری و مدیران؛
+- ورود و ثبت‌نام با کد پیامکی در صفحهٔ ورود وردپرس، حساب کاربری و تسویه‌حساب ووکامرس، بدون رمز؛
+- یادآوری سبد رهاشده با بازگشت یک‌لمسی، «موجود شد خبرم کن»، تبریک تولد با کد تخفیف، کد رهگیری و درخواست نظر؛
+- CRM هما: مخاطب، معامله، سرنخ و تیکت پشتیبانی از فرم‌ها و Contact Form 7؛
+- انبار، فاکتور و درگاه پرداخت هما برای ووکامرس؛
+- به‌روزرسانی خودکار، REST و پشتیبانی MCP برای توسعه‌دهنده‌ها.
+
+پیش‌نیاز: وردپرس ۵٫۲ به بالا و PHP ۷٫۲ به بالا. نصب: فایل zip را از plugin.homacrm.com بگیرید، در «افزونه‌ها ← افزودن ← بارگذاری» نصب و فعال کنید، سپس در منوی HomaCRM توکن را بچسبانید. افزونه رایگان است و ۱۵ روز آزمایشی رایگان هما دارد؛ هزینهٔ پیامک از اعتبار پیامک پرتال شما کم می‌شود. پشتیبانی: support@homacrm.com
+
+## FAQ
+- Does it replace other SMS or OTP login plugins? Yes — deactivate the old ones after setup; existing users sign in with the same mobile number.
+- Does it have a payment gateway? Yes, for WooCommerce (homacrm_pay), verifying payment against the invoice receipts in HomaCRM.
+- Does it work without WooCommerce? Yes — SMS login, forms, CRM sync and developer APIs work on plain WordPress.
+- Where is the code? https://github.com/Homa-OS/Plugins-HomaCRM (GPLv2+).

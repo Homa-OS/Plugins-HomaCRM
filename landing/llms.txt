@@ -1,0 +1,20 @@
+# HomaCRM for WordPress (افزونهٔ پیامک و CRM وردپرس هما)
+
+> HomaCRM is a free WordPress and WooCommerce plugin that connects a site to the HomaCRM platform with one API token: order SMS, passwordless login with a mobile one-time code, abandoned-cart recovery by SMS, CRM sync (contacts, deals, leads, support tickets), warehouse, invoices and a payment gateway for WooCommerce. Requires WordPress 5.2+ and PHP 7.2+. GPLv2 or later. A free 15-day HomaCRM trial is available.
+> افزونهٔ رسمی HomaCRM برای وردپرس و ووکامرس: پیامک خودکار سفارش، ورود و ثبت‌نام با موبایل، یادآوری سبد رهاشده و CRM، فقط با یک توکن API. نصب رایگان و ۱۵ روز آزمایشی رایگان.
+
+## Product
+- [Landing page / صفحهٔ معرفی](https://plugin.homacrm.com/): features, installation steps, technical specifications, FAQ (Persian) and an English summary
+- [Full content as Markdown](https://plugin.homacrm.com/llms-full.txt): everything on the landing page in plain text for AI assistants
+- [Download the plugin](https://plugin.homacrm.com/): the install button gives the latest zip (file name homacrm-<version>.zip, version always equals the live HomaCRM version)
+
+## Documentation
+- [Source code and README on GitHub](https://github.com/Homa-OS/Plugins-HomaCRM): readme, changelog, hooks, REST endpoints, shortcodes
+- [HomaCRM External API documentation](https://homacrm.com/api/v1/external/docs): authentication, messaging, CRM, warehouse, finance endpoints; how to get an API token
+- [HomaCRM website](https://homacrm.com/): the platform behind the plugin
+
+## Support
+- Email: support@homacrm.com
+
+## Optional
+- [Sitemap](https://plugin.homacrm.com/sitemap.xml)

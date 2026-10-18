@@ -18,7 +18,7 @@
 .homacrm-card-links .button{margin-inline-end:6px}
 @media(max-width:782px){.homacrm-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.homacrm-card{padding:18px}}
 @media(max-width:480px){.homacrm-grid{grid-template-columns:1fr}.homacrm-card-top{flex-direction:column;text-align:center}}
-.homacrm{max-width:1100px}
+.homacrm{max-width:1040px;margin-inline:auto!important;padding-inline:8px;box-sizing:border-box}
 .homacrm .nav-tab-wrapper{border:0;display:flex;flex-wrap:wrap;gap:6px;padding:0;margin:14px 0 0}
 .homacrm .nav-tab{float:none;margin:0;border:1px solid #dcdcde;border-radius:999px;background:#fff;color:#50575e;padding:7px 16px;font-weight:500;font-size:13px;line-height:1.4;transition:all .15s}
 .homacrm .nav-tab:hover{border-color:#00AAB0;color:#00AAB0;background:#fff}
@@ -45,3 +45,10 @@
 .homacrm-help a{color:#00838a;font-weight:600;text-decoration:none}
 .homacrm-help-note{margin:6px 0 0;font-size:12px;color:#646970}
 @media(max-width:782px){.homacrm .form-table,.homacrm .form-table tbody,.homacrm .form-table tr,.homacrm .form-table th,.homacrm .form-table td{display:block;width:auto}.homacrm .form-table th{padding:16px 16px 0}.homacrm .form-table td{padding:8px 16px 16px;border-top:0!important}.homacrm .form-table input[type=text],.homacrm .form-table input[type=password],.homacrm .form-table select,.homacrm .form-table textarea{width:100%}.homacrm .nav-tab{font-size:12px;padding:6px 12px}}
+.homacrm .form-table td>*{max-width:100%}
+.homacrm-trial{margin-top:14px;max-width:560px;border-radius:14px;padding:16px 18px;background:linear-gradient(135deg,#f3fbe6,#e6f7f7);border:1px solid #cdeced;position:relative;overflow:hidden}
+.homacrm-trial:before{content:"";position:absolute;inset:0 0 auto 0;height:4px;background:linear-gradient(90deg,#BCD630,#F3C015,#E33426,#00AAB0)}
+.homacrm-trial-t{font-weight:700;font-size:15px;color:#1d2327;margin-bottom:6px}
+.homacrm-trial ul{margin:0 18px 12px 0;list-style:disc}
+.homacrm-trial li{margin:3px 0}
+@media(max-width:600px){.homacrm{padding-inline:0}.homacrm-head h1{font-size:20px}.homacrm-trial .button{width:100%;text-align:center}}

@@ -114,7 +114,11 @@ final class Settings {
 	}
 
 	public static function menu() {
-		add_menu_page( __( 'هما', 'homacrm' ), __( 'هما', 'homacrm' ), 'manage_options', 'homacrm', array( __CLASS__, 'page' ), HOMACRM_URL . 'assets/menu-icon.svg', 58 );
+		add_menu_page( 'HomaCRM', 'HomaCRM', 'manage_options', 'homacrm', array( __CLASS__, 'page' ), HOMACRM_URL . 'assets/icon.svg', 58 );
+		// نشانِ رنگیِ اصلیِ هما؛ وردپرس آیکونِ تصویری را کم‌رنگ و کوچک نشان می‌دهد.
+		add_action( 'admin_head', static function () {
+			echo '<style>#toplevel_page_homacrm .wp-menu-image img{opacity:1;width:20px;height:20px;padding:7px 0 0}</style>';
+		} );
 	}
 
 	private static function tabs() {

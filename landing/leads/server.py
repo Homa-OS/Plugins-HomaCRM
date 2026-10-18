@@ -40,21 +40,26 @@ PAGE = '''<!doctype html><html lang="fa" dir="rtl"><head><meta charset="utf-8"><
 :root{color-scheme:light dark;--ink:#14181f;--mut:#5b6472;--line:#dfe6ec;--teal:#00AAB0;--teal2:#008b90;--bg1:#eef9fa;--bg2:#fbfcfd;--card:#fff}
 @media(prefers-color-scheme:dark){:root{--ink:#eef1f5;--mut:#a3adbb;--line:#2a323d;--bg1:#0f1a1c;--bg2:#0e1116;--card:#171b22;--teal2:#35c9cf}}
 *{box-sizing:border-box}
-body{margin:0;min-height:100vh;display:grid;place-items:center;padding:20px;color:var(--ink);background:linear-gradient(180deg,var(--bg1),var(--bg2) 60%%);font:16px/1.9 system-ui,-apple-system,"Segoe UI",Tahoma,"Noto Sans Arabic","Noto Naskh Arabic",Arial,sans-serif}
-.c{width:100%%;max-width:480px;background:var(--card);border:1px solid var(--line);border-radius:22px;padding:28px 24px;text-align:center;box-shadow:0 12px 40px rgba(0,60,70,.10);position:relative;overflow:hidden}
+html{-webkit-text-size-adjust:100%%}
+body{margin:0;min-height:100vh;min-height:100dvh;display:grid;place-items:center;padding:clamp(10px,2.4dvh,20px) 16px;color:var(--ink);background:linear-gradient(180deg,var(--bg1),var(--bg2) 60%%);font:16px/1.9 system-ui,-apple-system,"Segoe UI",Tahoma,"Noto Sans Arabic","Noto Naskh Arabic",Arial,sans-serif}
+.c{width:100%%;max-width:460px;background:var(--card);border:1px solid var(--line);border-radius:22px;padding:clamp(16px,3.4dvh,28px) 22px clamp(14px,2.6dvh,24px);text-align:center;box-shadow:0 12px 40px rgba(0,60,70,.10);position:relative;overflow:hidden}
 .c:before{content:"";position:absolute;inset:0 0 auto 0;height:5px;background:linear-gradient(90deg,#BCD630,#F3C015,#E33426,#00AAB0)}
-.m{display:block;margin:6px auto 10px}
-h1{font-size:22px;line-height:1.5;margin:0 0 4px}
-p{margin:6px 0;color:var(--mut);font-size:14.5px}
+.m{display:block;margin:2px auto clamp(4px,1.2dvh,10px);width:clamp(38px,6.5dvh,52px);height:auto}
+h1{font-size:clamp(18px,3dvh,22px);line-height:1.45;margin:0 0 4px}
+p{margin:clamp(3px,.8dvh,6px) 0;color:var(--mut);font-size:clamp(13px,1.9dvh,14.5px)}
 .v{display:inline-block;direction:ltr;background:var(--bg1);border:1px solid var(--line);border-radius:999px;padding:0 12px;font-size:12.5px;color:var(--teal2);font-weight:700}
-.b{display:block;margin:22px auto 8px;background:var(--teal);color:#fff;text-decoration:none;border-radius:16px;padding:12px 18px;font-weight:800;box-shadow:0 8px 20px rgba(0,170,176,.30)}
+.b{display:flex;align-items:center;justify-content:center;gap:16px;margin:clamp(12px,2.6dvh,22px) auto clamp(6px,1.2dvh,8px);background:var(--teal);color:#fff;text-decoration:none;border-radius:16px;padding:12px 18px;font-weight:800;box-shadow:0 8px 20px rgba(0,170,176,.30)}
 .b:hover,.b:focus-visible{background:var(--teal2);outline:3px solid var(--ink);outline-offset:2px}
-.b span{display:block;font-size:19px;line-height:1.6}
+.b .t{display:block;text-align:center}.b .t span{display:block;font-size:19px;line-height:1.5}
+.ar{flex:none;animation:bn 1.15s ease-in-out infinite}
+@keyframes bn{0%%,100%%{transform:translateY(-4px);opacity:.75}50%%{transform:translateY(5px);opacity:1}}
+@media(prefers-reduced-motion:reduce){.ar{animation:none}}
 .b small{display:block;direction:ltr;font:600 12.5px Arial,Helvetica,sans-serif;letter-spacing:.7px;opacity:.92}
-ol{text-align:right;color:var(--mut);padding-inline-start:22px;margin:16px 0 4px;font-size:14.5px}
-li{margin:4px 0}
+ol{text-align:right;color:var(--mut);padding-inline-start:22px;margin:clamp(8px,1.8dvh,16px) 0 2px;font-size:clamp(13px,1.9dvh,14.5px);line-height:1.75}
+li{margin:clamp(1px,.5dvh,4px) 0}
 a{color:var(--teal2)}
-.f{margin-top:16px;font-size:12.5px;color:var(--mut)}
+.f{margin-top:clamp(6px,1.6dvh,14px);font-size:12.5px;color:var(--mut)}
+@media(max-height:600px){ol{display:none}}
 </style></head><body><main class="c">%s</main></body></html>'''
 MARK = '<svg class="m" width="52" height="52" viewBox="0 0 64 64" aria-hidden="true"><defs><clipPath id="k"><path d="M10 8h44a8 8 0 018 8v26a8 8 0 01-8 8H30L16 60V50h-6a8 8 0 01-8-8V16a8 8 0 018-8z"/></clipPath></defs><g clip-path="url(#k)"><rect width="64" height="16" y="6" fill="#BCD630"/><rect width="64" height="14" y="19" fill="#F3C015"/><rect width="64" height="14" y="31" fill="#E33426"/><rect width="64" height="30" y="43" fill="#00AAB0"/></g></svg>'
 def page(inner, title='دانلود افزونه HomaCRM | افزونه پیامک وردپرس هما', desc='لینک دانلود افزونهٔ پیامک و CRM وردپرس هما (HomaCRM)'):
@@ -108,7 +113,7 @@ class H(http.server.BaseHTTPRequestHandler):
                 ev(c, l['id'], 'click_scanner' if bot else 'click', self)
                 z, name = personal_zip(l['lead_key'])
                 ver = (re.search(r'homacrm-([\d.]+)\.zip', name or '') or [None, ''])[1]
-                return self._send(200, page(f'<h1>افزونهٔ پیامک و CRM وردپرس هما</h1><p><span class="v">HomaCRM v{html.escape(ver)}</span></p><p>لینک نصب شما آماده است.</p><a class="b" href="/get/{l["token"]}/zip"><span>دانلود افزونه</span><small>Download Plugin</small></a><ol><li>در وردپرس: افزونه‌ها ← افزودن ← بارگذاری افزونه</li><li>فایل zip را انتخاب کنید و «نصب» و «فعال‌سازی» را بزنید</li><li>در منوی HomaCRM توکن رایگان بگیرید و بچسبانید</li></ol><p class="f">وردپرس ۵٫۲+ و PHP ۷٫۲+ · پرسش؟ <a href="mailto:support@homacrm.com">support@homacrm.com</a></p>', f'دانلود افزونه پیامک وردپرس هما (HomaCRM v{ver})', 'دانلود افزونهٔ پیامک و CRM وردپرس هما؛ نصب در سه قدم'))
+                return self._send(200, page(f'<h1>افزونهٔ پیامک و CRM وردپرس هما</h1><p><span class="v">HomaCRM v{html.escape(ver)}</span></p><p>لینک نصب شما آماده است.</p><a class="b" href="/get/{l["token"]}/zip"><svg class="ar" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v13"/><path d="M6 12l6 6 6-6"/></svg><span class="t"><span>دانلود افزونه</span><small>Download Plugin</small></span></a><ol><li>در وردپرس: افزونه‌ها ← افزودن ← بارگذاری افزونه</li><li>فایل zip را انتخاب کنید و «نصب» و «فعال‌سازی» را بزنید</li><li>در منوی HomaCRM توکن رایگان بگیرید و بچسبانید</li></ol><p class="f">وردپرس ۵٫۲+ و PHP ۷٫۲+ · پرسش؟ <a href="mailto:support@homacrm.com">support@homacrm.com</a></p>', f'دانلود افزونه پیامک وردپرس هما (HomaCRM v{ver})', 'دانلود افزونهٔ پیامک و CRM وردپرس هما؛ نصب در سه قدم'))
             if bot: ev(c, l['id'], 'download_scanner', self); return self._send(403, page('<h1>این دانلود فقط از مرورگر ممکن است</h1>', 'HomaCRM'))
             z, name = personal_zip(l['lead_key'])
             if not z: return self._send(503, page('<h1>فایل موقتاً در دسترس نیست</h1><p>چند دقیقه بعد دوباره امتحان کنید.</p>', 'HomaCRM'))

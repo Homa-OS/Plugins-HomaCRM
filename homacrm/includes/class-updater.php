@@ -1,6 +1,6 @@
 <?php
 /**
- * به‌روزرسانیِ خودکارِ افزونه از GitHub Releases (Homa-OS/homacrm-wordpress) و خبردادن به مدیرِ سایت.
+ * به‌روزرسانیِ خودکارِ افزونه از GitHub Releases (Homa-OS/Plugins-HomaCRM) و خبردادن به مدیرِ سایت.
  *
  * - هر ۱۲ ساعت آخرین نسخه را می‌خواند؛ نسخهٔ تازه در «به‌روزرسانی‌ها»ی وردپرس با یک کلیک نصب می‌شود.
  * - اعلانِ پیشخوان با خلاصهٔ تغییرات تا وقتی نصب نشده.
@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
 
 final class Updater {
 
-	const REPO      = 'Homa-OS/homacrm-wordpress';
+	const REPO      = 'Homa-OS/Plugins-HomaCRM';
 	const CACHE     = 'homacrm_latest_release';
 	const NOTIFIED  = 'homacrm_notified_version';
 	const SLUG      = 'homacrm';

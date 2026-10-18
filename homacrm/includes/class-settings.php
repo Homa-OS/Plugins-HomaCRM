@@ -176,7 +176,7 @@ final class Settings {
 			. '<p class="description">' . esc_html__( 'یک توکن برای همهٔ امکاناتِ این افزونه کافی است.', 'homacrm' ) . '</p>'
 			. ( $has ? '' : '<div class="homacrm-trial"><div class="homacrm-trial-t">' . esc_html__( 'توکنِ رایگانِ ۱۵ روزه بگیرید', 'homacrm' ) . '</div>'
 				. '<ul><li>' . esc_html__( 'ثبت‌نامِ رایگان در کمتر از یک دقیقه، فقط با شمارهٔ موبایل', 'homacrm' ) . '</li><li>' . esc_html__( '۱۰۰ هزار تومان شارژِ پیامکِ هدیه برای شروع', 'homacrm' ) . '</li><li>' . esc_html__( 'نصب و راه‌اندازیِ رایگان توسطِ پشتیبانیِ هما', 'homacrm' ) . '</li></ul>'
-				. '<a class="button button-primary" href="' . esc_url( 'https://homacrm.com/signup?source=wp-plugin&site=' . rawurlencode( home_url() ) . '&utm_source=wp-plugin&utm_medium=token-box' ) . '" target="_blank" rel="noopener">' . esc_html__( 'ثبت‌نامِ رایگان و دریافتِ توکن', 'homacrm' ) . ' ↗</a></div>' )
+				. '<a class="button button-primary" href="' . esc_url( 'https://homacrm.com/register?utm_source=wp-plugin&utm_medium=token-box&site=' . rawurlencode( home_url() ) ) . '" target="_blank" rel="noopener">' . esc_html__( 'ثبت‌نامِ رایگان و دریافتِ توکن', 'homacrm' ) . ' ↗</a></div>' )
 			. '<details class="homacrm-help"><summary>' . esc_html__( 'حسابِ هما دارید؟ توکن را از کجا بگیرم', 'homacrm' ) . '</summary><ol>'
 			. '<li>' . wp_kses_post( __( 'با حسابِ <b>مدیرِ اصلیِ پرتال</b> وارد پنلِ هما شوید.', 'homacrm' ) ) . ' <a href="https://homacrm.com/login?utm_source=wp-plugin&amp;utm_medium=token-help" target="_blank" rel="noopener">' . esc_html__( 'ورود به پنل', 'homacrm' ) . ' ↗</a></li>'
 			. '<li>' . wp_kses_post( __( 'به <b>مدیریتِ کاربران</b> بروید و دکمهٔ <b>«توکن‌ها»</b> را بزنید.', 'homacrm' ) ) . '</li>'

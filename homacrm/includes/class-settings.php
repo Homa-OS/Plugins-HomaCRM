@@ -138,6 +138,7 @@ final class Settings {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
+		Telemetry::once( 'opened' );
 		$tabs = self::tabs();
 		$tab  = isset( $_GET['tab'] ) && isset( $tabs[ $_GET['tab'] ] ) ? sanitize_key( $_GET['tab'] ) : 'connection'; // phpcs:ignore WordPress.Security.NonceVerification
 		$s    = self::all();
@@ -176,9 +177,9 @@ final class Settings {
 			. '<p class="description">' . esc_html__( 'یک توکن برای همهٔ امکاناتِ این افزونه کافی است.', 'homacrm' ) . '</p>'
 			. ( $has ? '' : '<div class="homacrm-trial"><div class="homacrm-trial-t">' . esc_html__( 'توکنِ رایگانِ ۱۵ روزه بگیرید', 'homacrm' ) . '</div>'
 				. '<ul><li>' . esc_html__( 'ثبت‌نامِ رایگان در کمتر از یک دقیقه، فقط با شمارهٔ موبایل', 'homacrm' ) . '</li><li>' . esc_html__( 'توکنِ آماده و ۱۵ روز آزمایشیِ رایگانِ هما', 'homacrm' ) . '</li><li>' . esc_html__( 'نصب و راه‌اندازیِ رایگان توسطِ پشتیبانیِ هما', 'homacrm' ) . '</li></ul>'
-				. '<a class="button button-primary" href="' . esc_url( 'https://homacrm.com/register?utm_source=wp-plugin&utm_medium=token-box&site=' . rawurlencode( home_url() ) ) . '" target="_blank" rel="noopener">' . esc_html__( 'ثبت‌نامِ رایگان و دریافتِ توکن', 'homacrm' ) . ' ↗</a></div>' )
+				. '<a class="button button-primary" href="' . esc_url( 'https://plugin.homacrm.com/go/register?site=' . rawurlencode( home_url() ) ) . '" target="_blank" rel="noopener">' . esc_html__( 'ثبت‌نامِ رایگان و دریافتِ توکن', 'homacrm' ) . ' ↗</a></div>' )
 			. '<details class="homacrm-help"><summary>' . esc_html__( 'حسابِ هما دارید؟ توکن را از کجا بگیرم', 'homacrm' ) . '</summary><ol>'
-			. '<li>' . wp_kses_post( __( 'با حسابِ <b>مدیرِ اصلیِ پرتال</b> وارد پنلِ هما شوید.', 'homacrm' ) ) . ' <a href="https://homacrm.com/login?utm_source=wp-plugin&amp;utm_medium=token-help" target="_blank" rel="noopener">' . esc_html__( 'ورود به پنل', 'homacrm' ) . ' ↗</a></li>'
+			. '<li>' . wp_kses_post( __( 'با حسابِ <b>مدیرِ اصلیِ پرتال</b> وارد پنلِ هما شوید.', 'homacrm' ) ) . ' <a href="https://plugin.homacrm.com/go/login" target="_blank" rel="noopener">' . esc_html__( 'ورود به پنل', 'homacrm' ) . ' ↗</a></li>'
 			. '<li>' . wp_kses_post( __( 'به <b>مدیریتِ کاربران</b> بروید و دکمهٔ <b>«توکن‌ها»</b> را بزنید.', 'homacrm' ) ) . '</li>'
 			. '<li>' . wp_kses_post( __( '<b>توکنِ اصلی</b> را کپی کنید و در کادرِ بالا بچسبانید، بعد «ذخیره».', 'homacrm' ) ) . '</li></ol>'
 			. '<p class="homacrm-help-note">' . esc_html__( 'ساختنِ توکنِ تازه توکنِ قبلی را باطل می‌کند.', 'homacrm' ) . '</p></details>' );

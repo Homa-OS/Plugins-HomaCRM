@@ -53,6 +53,7 @@ register_activation_hook(
 	static function () {
 		HomaCRM\Log::install();
 		HomaCRM\Telemetry::activated();
+		HomaCRM\Onboarding::activated();
 	}
 );
 register_deactivation_hook(

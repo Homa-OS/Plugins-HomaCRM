@@ -25,6 +25,7 @@ final class Plugin {
 		Settings::init();
 		Log::init();
 		Telemetry::init();
+		Onboarding::init();
 
 		if ( Settings::get( 'otp_enabled' ) ) {
 			Login::init();

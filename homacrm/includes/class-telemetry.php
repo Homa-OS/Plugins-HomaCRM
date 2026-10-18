@@ -40,6 +40,17 @@ final class Telemetry {
 		self::send( 'daily' );
 	}
 
+	/** هر رویدادِ مهمِ مسیر (مثلاً اولین بازشدنِ تنظیمات) فقط یک بار برای هر نصب. */
+	public static function once( $event ) {
+		$done = (array) get_option( 'homacrm_tm_once', array() );
+		if ( in_array( $event, $done, true ) ) {
+			return;
+		}
+		$done[] = $event;
+		update_option( 'homacrm_tm_once', $done, false );
+		self::send( $event );
+	}
+
 	public static function token_changed() {
 		self::send( 'token' );
 	}

@@ -173,7 +173,12 @@ final class Settings {
 	private static function tab_connection( $s ) {
 		$has = '' !== self::token();
 		self::row( __( 'توکنِ API', 'homacrm' ), '<input type="password" name="token" class="regular-text" autocomplete="new-password" placeholder="' . esc_attr( $has ? __( '•••••• (ذخیره شده — برای تغییر، توکنِ تازه را بنویسید)', 'homacrm' ) : __( 'توکن را از پنلِ هما بچسبانید', 'homacrm' ) ) . '">'
-			. '<p class="description">' . wp_kses_post( __( 'در پنلِ هما: <b>تنظیمات › توکنِ API</b> (فقط مدیرِ اصلیِ پرتال). یک توکن برای همهٔ امکاناتِ این افزونه کافی است.', 'homacrm' ) ) . '</p>' );
+			. '<p class="description">' . esc_html__( 'یک توکن برای همهٔ امکاناتِ این افزونه کافی است.', 'homacrm' ) . '</p>'
+			. '<details class="homacrm-help"' . ( $has ? '' : ' open' ) . '><summary>' . esc_html__( 'توکن را از کجا بگیرم؟', 'homacrm' ) . '</summary><ol>'
+			. '<li>' . wp_kses_post( __( 'با حسابِ <b>مدیرِ اصلیِ پرتال</b> وارد پنلِ هما شوید.', 'homacrm' ) ) . ' <a href="https://homacrm.com/login?utm_source=wp-plugin&amp;utm_medium=token-help" target="_blank" rel="noopener">' . esc_html__( 'ورود به پنل', 'homacrm' ) . ' ↗</a></li>'
+			. '<li>' . wp_kses_post( __( 'به <b>مدیریتِ کاربران</b> بروید و دکمهٔ <b>«توکن‌ها»</b> را بزنید.', 'homacrm' ) ) . '</li>'
+			. '<li>' . wp_kses_post( __( '<b>توکنِ اصلی</b> را کپی کنید و در کادرِ بالا بچسبانید، بعد «ذخیره».', 'homacrm' ) ) . '</li></ol>'
+			. '<p class="homacrm-help-note">' . esc_html__( 'ساختنِ توکنِ تازه توکنِ قبلی را باطل می‌کند. حسابِ هما ندارید؟', 'homacrm' ) . ' <a href="https://homacrm.com/?utm_source=wp-plugin&amp;utm_medium=token-help" target="_blank" rel="noopener">' . esc_html__( '۱۵ روز رایگان امتحان کنید', 'homacrm' ) . ' ↗</a></p></details>' );
 		if ( $has ) {
 			$v = Api::verify();
 			if ( $v['ok'] ) {

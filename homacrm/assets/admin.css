@@ -3,7 +3,7 @@
 .homacrm-ok{color:#1f8a6e;font-weight:600}
 .homacrm-bad{color:#c0392b;font-weight:600}
 .homacrm-site{font-size:13px;font-weight:600;margin-inline-start:8px;text-decoration:none}
-.homacrm-head{text-align:left}.homacrm-head h1{text-align:left}.homacrm-head .nav-tab-wrapper{text-align:left}.homacrm-head .nav-tab{float:left;margin:0 6px 0 0}
+.homacrm-head{text-align:left}.homacrm-head h1{text-align:left}.homacrm-head .nav-tab-wrapper{text-align:left}.homacrm-head .nav-tab-wrapper{justify-content:flex-start}
 .homacrm-card{background:#fff;border:1px solid #dcdcde;border-radius:16px;padding:24px;max-width:860px;margin-top:16px;box-shadow:0 1px 2px rgba(0,0,0,.04);position:relative;overflow:hidden}
 .homacrm-card:before{content:"";position:absolute;inset:0 0 auto 0;height:5px;background:linear-gradient(90deg,#BCD630,#F3C015,#E33426,#00AAB0)}
 .homacrm-card-top{display:flex;gap:18px;align-items:center}
@@ -18,3 +18,30 @@
 .homacrm-card-links .button{margin-inline-end:6px}
 @media(max-width:782px){.homacrm-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.homacrm-card{padding:18px}}
 @media(max-width:480px){.homacrm-grid{grid-template-columns:1fr}.homacrm-card-top{flex-direction:column;text-align:center}}
+.homacrm{max-width:1100px}
+.homacrm .nav-tab-wrapper{border:0;display:flex;flex-wrap:wrap;gap:6px;padding:0;margin:14px 0 0}
+.homacrm .nav-tab{float:none;margin:0;border:1px solid #dcdcde;border-radius:999px;background:#fff;color:#50575e;padding:7px 16px;font-weight:500;font-size:13px;line-height:1.4;transition:all .15s}
+.homacrm .nav-tab:hover{border-color:#00AAB0;color:#00AAB0;background:#fff}
+.homacrm .nav-tab-active,.homacrm .nav-tab-active:hover{background:#1d2327;border-color:#1d2327;color:#fff}
+.homacrm .form-table{background:#fff;border:1px solid #e2e4e7;border-radius:16px;margin-top:18px;border-collapse:separate;border-spacing:0;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.homacrm .form-table tr+tr th,.homacrm .form-table tr+tr td{border-top:1px solid #f0f0f1}
+.homacrm .form-table th{padding:18px 22px;color:#1d2327;font-weight:600}
+.homacrm .form-table td{padding:16px 22px}
+.homacrm .form-table input[type=text],.homacrm .form-table input[type=password],.homacrm .form-table input[type=number],.homacrm .form-table input[type=url],.homacrm .form-table select,.homacrm .form-table textarea{border:1px solid #c3c4c7;border-radius:10px;padding:7px 12px;min-height:40px;max-width:100%;box-shadow:none}
+.homacrm .form-table input:focus,.homacrm .form-table select:focus,.homacrm .form-table textarea:focus{border-color:#00AAB0;box-shadow:0 0 0 3px rgba(0,170,176,.15);outline:0}
+.homacrm .form-table input[type=checkbox]{border-radius:5px;width:18px;height:18px}
+.homacrm .form-table input[type=checkbox]:checked{background:#00AAB0;border-color:#00AAB0}
+.homacrm .form-table input[type=checkbox]:checked:before{filter:brightness(10)}
+.homacrm .description{color:#646970;margin-top:6px}
+.homacrm .button-primary{background:#00AAB0;border-color:#00AAB0;border-radius:10px;padding:4px 22px;min-height:40px;font-weight:600}
+.homacrm .button-primary:hover,.homacrm .button-primary:focus{background:#00959a;border-color:#00959a}
+.homacrm .button{border-radius:10px}
+.homacrm-ok{display:inline-block;background:#e8f6f0;border-radius:10px;padding:6px 12px}
+.homacrm-bad{display:inline-block;background:#fcebea;border-radius:10px;padding:6px 12px}
+.homacrm-help{margin-top:12px;background:#f0fafa;border:1px solid #cdeced;border-radius:12px;padding:10px 14px;max-width:560px}
+.homacrm-help summary{cursor:pointer;font-weight:600;color:#00838a}
+.homacrm-help ol{margin:10px 22px 6px 0;padding:0}
+.homacrm-help li{margin-bottom:6px;line-height:1.8}
+.homacrm-help a{color:#00838a;font-weight:600;text-decoration:none}
+.homacrm-help-note{margin:6px 0 0;font-size:12px;color:#646970}
+@media(max-width:782px){.homacrm .form-table,.homacrm .form-table tbody,.homacrm .form-table tr,.homacrm .form-table th,.homacrm .form-table td{display:block;width:auto}.homacrm .form-table th{padding:16px 16px 0}.homacrm .form-table td{padding:8px 16px 16px;border-top:0!important}.homacrm .form-table input[type=text],.homacrm .form-table input[type=password],.homacrm .form-table select,.homacrm .form-table textarea{width:100%}.homacrm .nav-tab{font-size:12px;padding:6px 12px}}

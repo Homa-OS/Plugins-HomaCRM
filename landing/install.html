@@ -20,11 +20,12 @@ button:hover,button:focus-visible{background:var(--teal2);outline:3px solid var(
 .n{margin-top:clamp(6px,1.6dvh,12px);font-size:12.5px;color:var(--mut)}a{color:var(--teal2)}
 .done{display:none}.sent .form{display:none}.sent .done{display:block}
 .big{font-size:44px;line-height:1.2}
-</style></head><body><main class="c" id="box">
+.tp{display:none;margin:8px 0 0;padding:8px 12px;border:1px solid #e8b44a;background:rgba(232,180,74,.14);border-radius:12px;font-size:13.5px;text-align:right}.tp.on{display:block}.tp b{direction:ltr;unicode-bidi:embed}.tp button{display:inline-block;width:auto;margin:6px 0 0 8px;padding:5px 14px;border-radius:9px;font-size:13px;box-shadow:none;background:var(--teal);color:#fff}.tp button.n{background:transparent;color:var(--mut);border:1px solid var(--line)}</style></head><body><main class="c" id="box">
 <img class="m" src="/mark.svg" alt="">
 <div class="form"><h1>پلاگین رو برات ارسال کنیم؟</h1>
 <form id="f" novalidate><label for="e">ایمیل شما</label>
 <input id="e" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com" required>
+<div class="tp" id="tp" role="status" aria-live="polite"></div>
 <input class="hp" type="text" id="w" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
 <button type="submit" id="b"><span>ارسال افزونه به ایمیل من</span><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 4L9 15"/><path d="M20 4l-7 16-4-5-5-4z"/></svg></button>
 <div class="msg" id="m" role="status" aria-live="polite"></div></form>
@@ -35,7 +36,13 @@ button:hover,button:focus-visible{background:var(--teal2);outline:3px solid var(
 (function(){var t0=Date.now(),q=new URLSearchParams(location.search),f=document.getElementById('f'),m=document.getElementById('m'),b=document.getElementById('b'),box=document.getElementById('box');
 function beacon(e,x){try{var d=JSON.stringify(Object.assign({e:e,p:location.pathname,q:location.search.slice(0,200),r:(document.referrer||'').slice(0,300),l:navigator.language,tz:(Intl.DateTimeFormat().resolvedOptions().timeZone||''),w:innerWidth,h:innerHeight,ua:navigator.userAgent.slice(0,300)},x||{}));if(navigator.sendBeacon)navigator.sendBeacon('/t',d)}catch(_){}}
 beacon('view');
-f.addEventListener('submit',function(ev){ev.preventDefault();var em=document.getElementById('e').value.trim();m.className='msg';
+
+var DOMS=['gmail.com','yahoo.com','hotmail.com','outlook.com','icloud.com','live.com','yandex.com','proton.me','protonmail.com'],tp=document.getElementById('tp'),inp=document.getElementById('e'),dis={};
+function lev(a,b){var d=[],i,j;for(i=0;i<=a.length;i++){d[i]=[i]}for(j=1;j<=b.length;j++)d[0][j]=j;for(i=1;i<=a.length;i++)for(j=1;j<=b.length;j++)d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));return d[a.length][b.length]}
+function suggest(em){var p=em.toLowerCase().split('@');if(p.length!==2||!p[0]||!p[1])return'';var h=p[1];if(DOMS.indexOf(h)>-1)return'';var fix={'gmail.con':'gmail.com','gmail.cim':'gmail.com','gmail.co':'gmail.com','gmail.comm':'gmail.com','gmailcom':'gmail.com','gmail.ocm':'gmail.com','gmai.com':'gmail.com','gmial.com':'gmail.com','gamil.com':'gmail.com','gnail.com':'gmail.com','gmail.gmail.com':'gmail.com','yaho.com':'yahoo.com','yahooo.com':'yahoo.com','yahoo.con':'yahoo.com','hotmial.com':'hotmail.com','hotmai.com':'hotmail.com','hotmail.con':'hotmail.com','outlok.com':'outlook.com','outlook.con':'outlook.com'};if(fix[h])return p[0]+'@'+fix[h];for(var i=0;i<DOMS.length;i++){var D=DOMS[i];if(Math.abs(D.length-h.length)<=1&&lev(h,D)===1&&h.split('.')[0].length>=4)return p[0]+'@'+D}return''}
+function hint(){var v=inp.value.trim(),sg=suggest(v);if(!sg||dis[v]){tp.className='tp';return''}tp.innerHTML='منظورتان <b></b> است؟ <button type="button" id="tpy">بله، اصلاح کن</button><button type="button" class="n" id="tpn">نه، همین درست است</button>';tp.querySelector('b').textContent=sg;tp.className='tp on';document.getElementById('tpy').onclick=function(){inp.value=sg;tp.className='tp'};document.getElementById('tpn').onclick=function(){dis[v]=1;tp.className='tp'};return sg}
+inp.addEventListener('blur',hint);
+f.addEventListener('submit',function(ev){ev.preventDefault();var em=document.getElementById('e').value.trim();m.className='msg';if(hint()){m.textContent='نشانی ایمیل را بررسی کنید.';m.className='msg bad';return}
  if(!/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(em)){m.textContent='ایمیل معتبر نیست.';m.className='msg bad';return}
  b.disabled=true;m.textContent='در حال ارسال…';beacon('click',{id:'send_link'});
  fetch('/api/lead',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:em,website:document.getElementById('w').value,dt:Date.now()-t0,us:q.get('utm_source')||'',um:q.get('utm_medium')||'',uc:q.get('utm_campaign')||'',ut:q.get('utm_content')||'',ref:document.referrer||'',lang:navigator.language||''})})

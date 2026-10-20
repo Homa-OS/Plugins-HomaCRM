@@ -10,6 +10,20 @@ DISPOSABLE = {'mailinator.com', 'guerrillamail.com', '10minutemail.com', 'tempma
 EMAIL_RE = re.compile(r'^[A-Za-z0-9._%+\-]{1,64}@[A-Za-z0-9\-]+(\.[A-Za-z0-9\-]+)*\.[A-Za-z]{2,24}$')
 BOT_RE = re.compile(r'bot|crawl|spider|preview|scan|curl|python|wget|headless|facebookexternalhit|slack|proofpoint|mimecast|barracuda|safelinks', re.I)
 lock = threading.Lock()
+# شمارندهٔ دانلودِ لندینگ (۱۴۰۵/۰۷/۲۸): دانلودهای ثبت‌شدهٔ همین سرویس + دانلودِ فایل‌های Releaseِ گیت‌هاب (ساعتی).
+# صفحه عدد را فقط از STATS_MIN به بالا نشان می‌دهد؛ عددِ کم اعتماد را پایین می‌آورد.
+STATS_MIN = int(os.environ.get('STATS_MIN', '100'))
+GH = {'n': 0, 't': 0.0}
+def gh_downloads():
+    if time.time() - GH['t'] > 3600:
+        GH['t'] = time.time()
+        try:
+            import urllib.request
+            r = urllib.request.urlopen(urllib.request.Request('https://api.github.com/repos/Homa-OS/Plugins-HomaCRM/releases?per_page=100', headers={'User-Agent': 'plugin-homacrm-stats'}), timeout=8)
+            GH['n'] = sum(a.get('download_count', 0) for x in json.load(r) for a in x.get('assets', []))
+        except Exception:
+            pass
+    return GH['n']
 
 def db():
     c = sqlite3.connect(DB, timeout=10); c.row_factory = sqlite3.Row; return c
@@ -99,6 +113,10 @@ class H(http.server.BaseHTTPRequestHandler):
         return self._j({'ok': True})
     def do_GET(self):
         p = urllib.parse.urlparse(self.path).path
+        if p == '/api/stats':
+            with db() as c:
+                n = (c.execute('SELECT COALESCE(SUM(downloads),0) FROM leads').fetchone()[0] or 0) + gh_downloads()
+            return self._j({'downloads': n, 'show': n >= STATS_MIN})
         m = re.match(r'^/get/([A-Za-z0-9_\-]{20,64})(/zip)?$', p); o = re.match(r'^/o/([A-Za-z0-9_\-]{20,64})\.gif$', p)
         if o:
             with db() as c:

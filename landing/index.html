@@ -138,7 +138,7 @@ code{display:inline-block;max-width:100%;overflow-wrap:anywhere;font:600 13px ui
     <p class="en" lang="en" dir="ltr">HomaCRM — SMS &amp; CRM Plugin for WordPress</p>
     <p class="lead">ورود با موبایل، پیامک خودکار و CRM برای وردپرس، با پشتیبانی کامل ووکامرس: سفارش، سبد رهاشده و پرداخت. فقط با یک توکن.</p>
     <a class="btn" id="dl" href="/install" rel="nofollow"><svg class="ic" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0l-4.5-4.5M12 15l4.5-4.5"/><path d="M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg><span class="bt"><b>دریافت افزونه</b><small lang="en" dir="ltr">Get the Plugin</small></span></a>
-    <p class="meta"><span>۱۵ روز مهمان ما باشید</span><span>نسخه <bdi dir="ltr">{{VERSION}}</bdi></span></p>
+    <p class="meta" id="meta"><span>۱۵ روز مهمان ما باشید</span><span>نسخه <bdi dir="ltr">{{VERSION}}</bdi></span></p>
     <div class="hand" id="hand" hidden>
       <p><b>روی رایانه نصب می‌کنید؟</b> پنل وردپرس را معمولاً با رایانه باز می‌کنید؛ لینک را برای خودتان بفرستید تا همان‌جا نصب کنید.</p>
       <div class="hrow">
@@ -230,6 +230,8 @@ code{display:inline-block;max-width:100%;overflow-wrap:anywhere;font:600 13px ui
   <nav aria-label="پیوندهای پایین"><a class="ltr" href="mailto:support@homacrm.com">support@homacrm.com</a><a href="https://homacrm.com/?utm_source=plugin-landing&amp;utm_medium=footer" target="_blank" rel="noopener">HomaCRM</a><a href="https://github.com/Homa-OS/Plugins-HomaCRM" target="_blank" rel="noopener">GitHub</a><a href="https://homacrm.com/register?utm_source=plugin-landing&amp;utm_medium=footer" target="_blank" rel="noopener">ثبت‌نام در HomaCRM</a></nav>
 </div></footer>
 <script>
+// شمارندهٔ دانلود: فقط وقتی سرویس show=true بدهد (از ۱۰۰ به بالا) در ردیفِ زیرِ دکمه می‌آید.
+fetch('/api/stats').then(function(r){return r.json()}).then(function(j){if(!j||!j.show)return;var s=document.createElement('span');s.textContent=Number(j.downloads).toLocaleString('fa-IR')+' دانلود';document.getElementById('meta').appendChild(s)}).catch(function(){});
 (function(){
   var box=document.getElementById('hand'); if(!box) return; box.hidden=false;
   var u='https://plugin.homacrm.com/?utm_source=self&utm_medium=mobile-handoff';

@@ -22,7 +22,7 @@ def gh_downloads():
             r = urllib.request.urlopen(urllib.request.Request('https://api.github.com/repos/Homa-OS/Plugins-HomaCRM/releases?per_page=100', headers={'User-Agent': 'plugin-homacrm-stats'}), timeout=8)
             GH['n'] = sum(a.get('download_count', 0) for x in json.load(r) for a in x.get('assets', []))
         except Exception:
-            pass
+            GH['t'] = time.time() - 3300  # ناموفق ⇒ ۵ دقیقهٔ دیگر دوباره، نه یک ساعت بعد
     return GH['n']
 
 def db():

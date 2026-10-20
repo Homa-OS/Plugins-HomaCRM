@@ -52,3 +52,7 @@
 .homacrm-trial ul{margin:0 18px 12px 0;list-style:disc}
 .homacrm-trial li{margin:3px 0}
 @media(max-width:600px){.homacrm{padding-inline:0}.homacrm-head h1{font-size:20px}.homacrm-trial .button{width:100%;text-align:center}}
+.homacrm-test{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:8px}
+.homacrm-test input{width:160px;min-height:36px!important}
+.homacrm-test .button{min-height:36px}
+.homacrm-default-submit{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}

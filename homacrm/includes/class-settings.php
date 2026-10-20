@@ -167,6 +167,8 @@ final class Settings {
 			}
 			echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '">';
 			wp_nonce_field( 'homacrm_save' );
+			// دکمهٔ پیش‌فرضِ پنهان: Enter در هر فیلد «ذخیره» است، نه اولین دکمهٔ آزمون.
+			echo '<button type="submit" class="homacrm-default-submit" tabindex="-1" aria-hidden="true"></button>';
 			echo '<input type="hidden" name="action" value="homacrm_save"><input type="hidden" name="tab" value="' . esc_attr( $tab ) . '"><table class="form-table" role="presentation">';
 			call_user_func( array( __CLASS__, 'tab_' . $tab ), $s );
 			echo '</table>';
@@ -205,6 +207,7 @@ final class Settings {
 		}
 		self::row( __( 'شمارهٔ فرستنده', 'homacrm' ), '<input type="text" name="sender" value="' . esc_attr( $s['sender'] ) . '" class="regular-text" dir="ltr"><p class="description">' . esc_html__( 'خالی بگذارید تا خطِ پیش‌فرضِ پرتال استفاده شود.', 'homacrm' ) . '</p>' );
 		self::row( __( 'نشانیِ API', 'homacrm' ), '<input type="url" name="api_base" value="' . esc_attr( $s['api_base'] ) . '" class="regular-text" dir="ltr"><p class="description">' . esc_html__( 'فقط برای نسخهٔ اختصاصیِ هما؛ پیش‌فرض: ', 'homacrm' ) . '<code>' . esc_html( HOMACRM_DEFAULT_API ) . '</code></p>' );
+		self::row( __( 'آزمونِ اتصال', 'homacrm' ), '<button type="submit" class="button" name="homacrm_test" value="api">' . esc_html__( 'ذخیره و آزمونِ اتصال', 'homacrm' ) . '</button><p class="description">' . esc_html__( 'توکن، نشانیِ API و اعتبارِ پیامک را با همین مقدارهای فرم می‌سنجد.', 'homacrm' ) . '</p><p>' . self::test_box( 'test' ) . '</p>' );
 	}
 
 	private static function tab_login( $s ) {
@@ -215,7 +218,7 @@ final class Settings {
 		self::checkbox( 'otp_register', $s, __( 'اگر کاربری با این موبایل نبود، خودکار ثبت‌نام شود', 'homacrm' ) );
 		self::row( __( 'طولِ کد', 'homacrm' ), '<input type="number" min="4" max="8" name="otp_length" value="' . esc_attr( $s['otp_length'] ) . '">' );
 		self::row( __( 'اعتبارِ کد (ثانیه)', 'homacrm' ), '<input type="number" min="60" max="600" name="otp_ttl" value="' . esc_attr( $s['otp_ttl'] ) . '">' );
-		self::row( __( 'متنِ پیامکِ کد', 'homacrm' ), '<textarea name="otp_template" rows="3" class="large-text">' . esc_textarea( $s['otp_template'] ) . '</textarea><p class="description">{code} {site}</p>' );
+		self::row( __( 'متنِ پیامکِ کد', 'homacrm' ), self::tpl( 'otp_template', $s ) . '<p class="description">{code} {site}</p>' );
 		self::row( __( 'کدِ کوتاه', 'homacrm' ), '<code>[homacrm_login]</code> — ' . esc_html__( 'فرمِ ورود/ثبت‌نام با پیامک را هر جای سایت می‌گذارد.', 'homacrm' ) );
 	}
 
@@ -227,13 +230,13 @@ final class Settings {
 		$labels = array( 'processing' => __( 'در حال انجام', 'homacrm' ), 'completed' => __( 'تکمیل‌شده', 'homacrm' ), 'on-hold' => __( 'در انتظار', 'homacrm' ), 'cancelled' => __( 'لغوشده', 'homacrm' ), 'refunded' => __( 'مسترد', 'homacrm' ), 'failed' => __( 'ناموفق', 'homacrm' ) );
 		foreach ( $labels as $st => $label ) {
 			$on = in_array( $st, (array) $s['woo_statuses'], true );
-			self::row( sprintf( __( 'وضعیتِ «%s»', 'homacrm' ), $label ), '<label><input type="checkbox" name="woo_statuses[]" value="' . esc_attr( $st ) . '"' . checked( $on, true, false ) . '> ' . esc_html__( 'پیامک به مشتری', 'homacrm' ) . '</label><textarea name="woo_tpl_' . esc_attr( $st ) . '" rows="3" class="large-text">' . esc_textarea( $s[ 'woo_tpl_' . $st ] ) . '</textarea>' );
+			self::row( sprintf( __( 'وضعیتِ «%s»', 'homacrm' ), $label ), '<label><input type="checkbox" name="woo_statuses[]" value="' . esc_attr( $st ) . '"' . checked( $on, true, false ) . '> ' . esc_html__( 'پیامک به مشتری', 'homacrm' ) . '</label>' . self::tpl( 'woo_tpl_' . $st, $s ) );
 		}
 		self::row( __( 'متغیرها', 'homacrm' ), '<code>{name} {order} {total} {status} {site} {mobile} {tracking} {pay}</code><p class="description">' . esc_html__( '{pay} لینکِ پرداختِ دوبارهٔ همان سفارش است (برای «ناموفق»).', 'homacrm' ) . '</p>' );
 		$adm  = Util::mobiles( $s['woo_admin_mobiles'] );
 		$warn = $adm['invalid'] ? '<p class="homacrm-bad">' . esc_html( sprintf( __( 'این شماره‌ها معتبر نیستند و پیامک نمی‌گیرند: %s', 'homacrm' ), implode( '، ', $adm['invalid'] ) ) ) . '</p>' : '';
 		self::row( __( 'موبایلِ مدیران', 'homacrm' ), '<input type="text" name="woo_admin_mobiles" value="' . esc_attr( $s['woo_admin_mobiles'] ) . '" class="regular-text" dir="ltr"><p class="description">' . esc_html__( 'چند شماره را با ویرگول، «،»، فاصله یا خطِ تازه جدا کنید؛ برای هر سفارشِ تازه (از سایت یا ثبتِ دستی در پیشخوان) پیامک می‌گیرند.', 'homacrm' ) . '</p>' . $warn );
-		self::row( __( 'متنِ پیامکِ مدیر', 'homacrm' ), '<textarea name="woo_admin_template" rows="2" class="large-text">' . esc_textarea( $s['woo_admin_template'] ) . '</textarea>' );
+		self::row( __( 'متنِ پیامکِ مدیر', 'homacrm' ), self::tpl( 'woo_admin_template', $s, 2 ) );
 		self::checkbox( 'woo_sync_contact', $s, __( 'خریدار در CRMِ هما «مخاطب» شود', 'homacrm' ) );
 		self::row( __( 'ثبتِ سفارش به‌عنوانِ معامله', 'homacrm' ), '<input type="number" name="woo_deal_pipeline" value="' . esc_attr( $s['woo_deal_pipeline'] ) . '" placeholder="pipelineId"> <input type="number" name="woo_deal_stage" value="' . esc_attr( $s['woo_deal_stage'] ) . '" placeholder="stageId"><p class="description">' . esc_html__( 'خالی/۰ = خاموش. شناسه‌ها را از «ابزارها» ببینید.', 'homacrm' ) . '</p>' );
 		echo '<tr><th colspan="2"><h2>' . esc_html__( 'انبار و فاکتورِ هما', 'homacrm' ) . '</h2></th></tr>';
@@ -247,7 +250,7 @@ final class Settings {
 	}
 
 	private static function tab_engage( $s ) {
-		$ta = static function ( $k ) use ( $s ) { return '<textarea name="' . esc_attr( $k ) . '" rows="3" class="large-text">' . esc_textarea( $s[ $k ] ) . '</textarea>'; };
+		$ta = static function ( $k ) use ( $s ) { return self::tpl( $k, $s ); };
 		$nm = static function ( $k, $suffix ) use ( $s ) { return '<input type="number" min="0" name="' . esc_attr( $k ) . '" value="' . esc_attr( $s[ $k ] ) . '" style="width:80px"> ' . esc_html( $suffix ); };
 		echo '<tr><td colspan="2"><p class="description">' . esc_html__( 'پیامک‌های تبلیغاتی فقط ۹ صبح تا ۹ شب فرستاده می‌شوند.', 'homacrm' ) . '</p></td></tr>';
 		self::checkbox( 'eng_cart', $s, __( 'یادآورِ سبدِ رهاشده (دو پیامک با لینکِ بازگشت به سبد)', 'homacrm' ) );
@@ -312,7 +315,7 @@ final class Settings {
 		self::checkbox( 'auto_update', $s, __( 'نسخه‌های تازه خودکار نصب شوند', 'homacrm' ) );
 		self::checkbox( 'notify_email', $s, __( 'نسخهٔ تازه به ایمیلِ مدیرِ سایت خبر داده شود', 'homacrm' ) );
 		self::checkbox( 'notify_sms', $s, __( 'نسخهٔ تازه با پیامک هم خبر داده شود (از اعتبارِ همین پرتال)', 'homacrm' ) );
-		self::row( __( 'موبایلِ مدیر', 'homacrm' ), '<input type="text" name="notify_mobile" value="' . esc_attr( $s['notify_mobile'] ) . '" dir="ltr" placeholder="09xxxxxxxxx">' );
+		self::row( __( 'موبایلِ مدیر', 'homacrm' ), '<input type="text" name="notify_mobile" value="' . esc_attr( $s['notify_mobile'] ) . '" dir="ltr" placeholder="09xxxxxxxxx">' . self::test_box( 'test' ) );
 	}
 
 	private static function about_tab() {
@@ -390,6 +393,11 @@ final class Settings {
 				$msg = __( 'توکن ذخیره نشد: ', 'homacrm' ) . $v['error'];
 			}
 		}
+		$test = sanitize_key( $in['homacrm_test'] ?? '' );
+		if ( '' !== $test && ( 'api' === $test || 'test' === $test || array_key_exists( $test, self::defaults() ) ) ) {
+			$mob = isset( $in['test_mobile'][ $test ] ) ? sanitize_text_field( $in['test_mobile'][ $test ] ) : '';
+			$msg = self::run_test( $test, $mob );
+		}
 		wp_safe_redirect( add_query_arg( array( 'page' => 'homacrm', 'tab' => $tab, 'homacrm_msg' => rawurlencode( $msg ) ), admin_url( 'admin.php' ) ) );
 		exit;
 	}
@@ -406,6 +414,84 @@ final class Settings {
 	}
 
 	/* ---------- کمکی‌های فرم ---------- */
+
+	/** شمارهٔ پیش‌فرضِ آزمون: آخرین شمارهٔ آزمون، موبایلِ مدیر (نسخهٔ تازه)، موبایلِ کاربرِ فعلی، یا اولین «موبایلِ مدیران». */
+	private static function test_mobile() {
+		$m = (string) get_option( 'homacrm_test_mobile', '' );
+		if ( '' === $m ) {
+			$m = (string) self::get( 'notify_mobile' );
+		}
+		if ( '' === $m ) {
+			$u = get_current_user_id();
+			$m = (string) ( get_user_meta( $u, Login::META, true ) ?: get_user_meta( $u, 'billing_phone', true ) );
+		}
+		if ( '' === Util::mobile( $m ) ) {
+			$m = (string) ( Util::mobiles( self::get( 'woo_admin_mobiles' ) )['valid'][0] ?? '' );
+		}
+		return Util::mobile( $m );
+	}
+
+	/** کادرِ موبایل + دکمهٔ «ذخیره و ارسالِ آزمایشی» برای یک متن (یا 'test' برای پیامکِ آزمایشیِ ساده). */
+	private static function test_box( $key ) {
+		return '<span class="homacrm-test"><input type="tel" name="test_mobile[' . esc_attr( $key ) . ']" value="' . esc_attr( self::test_mobile() ) . '" dir="ltr" placeholder="09xxxxxxxxx" aria-label="' . esc_attr__( 'موبایلِ آزمون', 'homacrm' ) . '">'
+			. '<button type="submit" class="button" name="homacrm_test" value="' . esc_attr( $key ) . '">' . esc_html__( 'ذخیره و ارسالِ آزمایشی', 'homacrm' ) . '</button></span>';
+	}
+
+	/** کادرِ متنِ پیامک با دکمهٔ آزمون زیرش. */
+	private static function tpl( $key, $s, $rows = 3 ) {
+		return '<textarea name="' . esc_attr( $key ) . '" rows="' . (int) $rows . '" class="large-text">' . esc_textarea( $s[ $key ] ) . '</textarea>' . self::test_box( $key );
+	}
+
+	/** نمونهٔ متغیرها برای پیامکِ آزمایشی. */
+	private static function sample_vars() {
+		return array(
+			'name'     => __( 'مشتریِ نمونه', 'homacrm' ),
+			'order'    => '1234',
+			'total'    => '1,250,000 ' . __( 'ریال', 'homacrm' ),
+			'status'   => __( 'در حال انجام', 'homacrm' ),
+			'site'     => get_bloginfo( 'name' ),
+			'mobile'   => '09120000000',
+			'tracking' => '123456789012',
+			'carrier'  => __( 'پست', 'homacrm' ),
+			'pay'      => home_url( '/' ),
+			'link'     => home_url( '/' ),
+			'product'  => __( 'کالای نمونه', 'homacrm' ),
+			'code'     => '12345',
+			'percent'  => (string) (int) self::get( 'eng_welcome_percent' ),
+			'days'     => (string) (int) self::get( 'eng_welcome_days' ),
+		);
+	}
+
+	/** آزمون بعد از ذخیره: 'api' = سنجشِ اتصال؛ کلیدِ متن = ارسالِ همان متن با متغیرهای نمونه. */
+	private static function run_test( $key, $mobile ) {
+		if ( 'api' === $key ) {
+			if ( '' === self::token() ) {
+				return __( 'آزمونِ اتصال: توکن ذخیره نشده است.', 'homacrm' );
+			}
+			$v = Api::verify();
+			if ( ! $v['ok'] ) {
+				return __( 'آزمونِ اتصال ناموفق: ', 'homacrm' ) . $v['error'];
+			}
+			$c = Api::credit();
+			return sprintf( __( 'آزمونِ اتصال موفق — پرتالِ %1$s، اعتبارِ پیامک: %2$s ریال', 'homacrm' ), (string) ( $v['data']['portalCode'] ?? '' ), $c['ok'] ? number_format_i18n( (float) ( $c['data']['balance'] ?? 0 ) ) : '—' );
+		}
+		$m = Util::mobile( $mobile );
+		if ( '' === $m ) {
+			return __( 'ارسالِ آزمایشی: شمارهٔ موبایل نامعتبر است.', 'homacrm' );
+		}
+		update_option( 'homacrm_test_mobile', $m, false );
+		if ( 'test' === $key ) {
+			$text = sprintf( __( 'پیامِ آزمایشیِ افزونهٔ هما از %s', 'homacrm' ), get_bloginfo( 'name' ) );
+		} else {
+			$tpl = (string) self::get( $key );
+			if ( '' === trim( $tpl ) ) {
+				return __( 'ارسالِ آزمایشی: متن خالی است.', 'homacrm' );
+			}
+			$text = __( '(آزمایشی) ', 'homacrm' ) . Util::render( $tpl, self::sample_vars() );
+		}
+		$r = Sms::send( $m, $text, 'test' );
+		return $r['ok'] ? sprintf( __( 'ذخیره شد و پیامکِ آزمایشی به %s فرستاده شد.', 'homacrm' ), $m ) : __( 'ذخیره شد، ولی پیامکِ آزمایشی نرفت: ', 'homacrm' ) . $r['error'];
+	}
 
 	private static function row( $label, $html ) {
 		echo '<tr><th scope="row">' . esc_html( $label ) . '</th><td>' . $html . '</td></tr>'; // phpcs:ignore WordPress.Security.EscapeOutput -- html از همین کلاس و escape‌شده.

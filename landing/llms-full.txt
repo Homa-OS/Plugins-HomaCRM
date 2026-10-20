@@ -38,7 +38,7 @@ HomaCRM for WordPress is the official plugin of HomaCRM (HomaCRM, Negin Shahr-e 
 - انبار، فاکتور و درگاه پرداخت هما برای ووکامرس؛
 - به‌روزرسانی خودکار، REST و پشتیبانی MCP برای توسعه‌دهنده‌ها.
 
-پیش‌نیاز: وردپرس ۵٫۲ به بالا و PHP ۷٫۲ به بالا. نصب: ایمیلتان را در plugin.homacrm.com/install بنویسید تا لینک فایل zip را بگیرید، در «افزونه‌ها ← افزودن ← بارگذاری» نصب و فعال کنید، سپس در منوی HomaCRM توکن را بچسبانید. افزونه رایگان است و ۱۵ روز آزمایشی رایگان هما دارد؛ هزینهٔ پیامک از اعتبار پیامک پرتال شما کم می‌شود. پشتیبانی: support@homacrm.com
+پیش‌نیاز: وردپرس ۵٫۲ به بالا و PHP ۷٫۲ به بالا. نصب: ایمیلتان را در plugin.homacrm.com/install بنویسید تا لینک فایل zip را بگیرید، در «افزونه‌ها ← افزودن ← بارگذاری» نصب و فعال کنید، سپس در منوی HomaCRM توکن را بچسبانید. افزونه رایگان است و ۱۵ روز مهمان هما هستید؛ هزینهٔ پیامک از اعتبار پیامک پرتال شما کم می‌شود. پشتیبانی: support@homacrm.com
 
 ## FAQ
 - Does it replace other SMS or OTP login plugins? Yes — deactivate the old ones after setup; existing users sign in with the same mobile number.

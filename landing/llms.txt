@@ -6,7 +6,7 @@
 ## Product
 - [Landing page / صفحهٔ معرفی](https://plugin.homacrm.com/): features, installation steps, technical specifications, FAQ (Persian) and an English summary
 - [Full content as Markdown](https://plugin.homacrm.com/llms-full.txt): everything on the landing page in plain text for AI assistants
-- [Get the plugin](https://plugin.homacrm.com/install): enter your email and the download link (latest zip, version always equals the live HomaCRM version) is emailed to you; the source is also on GitHub
+- [Get the plugin](https://plugin.homacrm.com/install): enter your email and the download link (latest zip, version = the live HomaCRM version plus a release number, e.g. 3.13.16.1) is emailed to you; the source is also on GitHub
 
 ## Documentation
 - [Source code and README on GitHub](https://github.com/Homa-OS/Plugins-HomaCRM): readme, changelog, hooks, REST endpoints, shortcodes

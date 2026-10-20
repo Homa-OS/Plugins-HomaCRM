@@ -32,12 +32,13 @@
 
 | تب | چه می‌کند |
 |---|---|
+| **About** | صفحهٔ پیش‌فرض: نسخه، وضعیتِ اتصال، وردپرس و PHP و ووکامرس؛ تنظیماتِ به‌روزرسانی |
 | **Connection** | اتصال فقط با توکنِ API هما؛ نمایشِ پرتال و اعتبارِ پیامک؛ راهنمای گرفتنِ توکن |
 | **SMS Login** | ورود و ثبت‌نام با کدِ یک‌بارمصرف در `wp-login`، حسابِ کاربریِ ووکامرس، تسویه‌حساب و `[homacrm_login]` — کاربرانِ قبلی با همان موبایل وارد می‌شوند |
 | **WooCommerce** | پیامکِ هر وضعیتِ سفارش به مشتری، پیامکِ سفارشِ تازه به مدیران، خریدار ⇒ «مخاطب»، سفارش ⇒ «معامله» |
-| **Marketing** | سبدِ رهاشده (دو پیامک با لینکِ بازگشتِ یک‌لمسی)، «موجود شد خبرم کن»، تبریکِ تولد با کدِ تخفیفِ یک‌بارمصرف، کدِ رهگیریِ مرسوله، درخواستِ نظر |
+| **Marketing** | سبدِ رهاشده (دو پیامک با لینکِ بازگشتِ یک‌لمسی)، تشکرِ اولین خرید با کدِ تخفیفِ خریدِ دوم، پیگیریِ سفارش `[homacrm_track]`، «موجود شد خبرم کن»، تبریکِ تولد با کدِ تخفیفِ یک‌بارمصرف، کدِ رهگیریِ مرسوله، درخواستِ نظر |
 | **CRM & Forms** | کاربرِ تازه ⇒ مخاطب؛ `[homacrm_form]` و Contact Form 7 ⇒ سرنخ یا تیکتِ پشتیبانی |
-| **Tools & Reports** | پیامکِ آزمایشی، قیف‌ها و مرحله‌های فروش، لاگِ آخرین پیامک‌ها |
+| **Tools & Reports** | پیامکِ آزمایشی، قیف‌ها و مرحله‌های فروش، خلاصهٔ ۷ روزه (موفق/ناموفقِ هر بخش و اعتبار)، لاگِ آخرین پیامک‌ها با تاریخِ شمسی |
 | **About** | شناسنامهٔ افزونه: نسخه، وضعیتِ اتصال، نسخهٔ وردپرس و PHP؛ تنظیماتِ به‌روزرسانی |
 
 ### انبار، فاکتور و درگاهِ پرداخت (ووکامرس)
@@ -55,13 +56,15 @@
 
 | کاربرد | متغیرها |
 |---|---|
-| پیامکِ سفارش | `{name} {order} {total} {status} {site} {mobile} {tracking}` |
+| پیامکِ سفارش | `{name} {order} {total} {status} {site} {mobile} {tracking} {pay}` (`{pay}` لینکِ پرداختِ دوباره) |
 | کدِ ورود | `{site} {code}` |
 | سبدِ رهاشده | `{site} {product} {link}` |
 | موجود شد | `{product} {site} {link}` |
 | تولد | `{name} {site} {code} {percent}` |
 | رهگیری | `{name} {order} {carrier} {tracking}` |
 | درخواستِ نظر | `{name} {product} {link}` |
+| تشکرِ اولین خرید | `{name} {site} {code} {percent} {days}` |
+| کدِ پیگیریِ سفارش | `{order} {site} {code}` |
 
 ## کدهای کوتاه
 
@@ -69,10 +72,11 @@
 |---|---|
 | `[homacrm_login redirect="/my-account"]` | فرمِ ورود/ثبت‌نام با پیامک |
 | `[homacrm_form title="درخواستِ مشاوره" button="ارسال"]` | فرمِ سرنخ/تیکت |
+| `[homacrm_track]` | پیگیریِ سفارش با شمارهٔ سفارش و کدِ پیامکی (مهمان هم) |
 
 ## به‌روزرسانی
 
-هر نسخهٔ تازه با یک Release در همین مخزن منتشر می‌شود (برچسبِ `vX.Y.Z` و فایلِ `HomaCRM-<نسخه>.zip`؛ `homacrm.zip` هم برای به‌روزرسانِ نصب‌های قدیمی می‌ماند). افزونه هر ۱۲ ساعت آن را می‌بیند:
+نسخه = نسخهٔ هما + شمارهٔ انتشار (مثلاً `3.13.16.1`). هر نسخهٔ تازه با یک Release در همین مخزن منتشر می‌شود (برچسبِ `vX.Y.Z.N` و فایلِ `HomaCRM-<نسخه>.zip`؛ `homacrm.zip` هم برای به‌روزرسانِ نصب‌های قدیمی می‌ماند). افزونه هر ۱۲ ساعت آن را می‌بیند:
 
 - در «افزونه‌ها» و «به‌روزرسانی‌ها»ی وردپرس دکمهٔ به‌روزرسانی می‌آید و در پیشخوان اعلان با خلاصهٔ تغییرات نشان داده می‌شود.
 - برای هر نسخه یک بار به ایمیلِ مدیرِ سایت خبر می‌دهد؛ پیامک به موبایلِ مدیر هم اختیاری است.
@@ -98,7 +102,7 @@ $res = HomaCRM\Sms::send( '09121234567', 'سلام!' ); // ['ok'=>bool,'error'=>
 $r = HomaCRM\Api::request( 'GET', '/crm/contacts?search=0912' );
 ```
 
-**هوک‌ها:** `homacrm_sms_message` (فیلترِ متن)، `homacrm_sms_sent`، `homacrm_user_registered`، `homacrm_login_redirect`، `homacrm_form_submitted`.
+**هوک‌ها:** `homacrm_send_sms` (اکشن برای ارسال)، `homacrm_sms_message` (فیلترِ متن)، `homacrm_sms_sent`، `homacrm_user_registered`، `homacrm_login_redirect`، `homacrm_form_submitted`.
 
 **REST** (فقط مدیرِ سایت، با Application Password):
 
@@ -136,7 +140,8 @@ homacrm/
   includes/class-woocommerce.php پیامکِ سفارش‌ها
   includes/class-shop.php        انبار، قیمت، فاکتور
   includes/class-gateway.php     درگاهِ پرداختِ هما
-  includes/class-engage.php      سبد رهاشده، تولد، رهگیری، نظر
+  includes/class-engage.php      سبد رهاشده، تولد، تشکرِ اولین خرید، رهگیری، نظر
+  includes/class-track.php       پیگیریِ سفارش ([homacrm_track])
   includes/class-crm-sync.php    مخاطبان و معاملات
   includes/class-forms.php       فرم و CF7
   includes/class-abilities.php   REST و MCP
@@ -149,7 +154,7 @@ release.sh · set-version.sh      انتشارِ نسخه
 
 ### انتشارِ نسخهٔ تازه (برای تیمِ هما)
 
-`./set-version.sh` نسخه را از `https://homacrm.com/api/version` می‌خواند و در `homacrm.php` (هر دو جا) و `readme.txt` می‌نویسد؛ `CHANGELOG.md` را بنویسید و `GITHUB_TOKEN=… ./release.sh` را بزنید. لندینگ را با `landing/deploy.sh` منتشر کنید.
+`./set-version.sh --bump` نسخهٔ بعدی را می‌گذارد (نسخهٔ هما + شمارهٔ انتشار) و در `homacrm.php` و `readme.txt` می‌نویسد؛ بخشِ همان نسخه را در `CHANGELOG.md` بنویسید، کامیت کنید، `GITHUB_TOKEN=… ./release.sh` و بعد `landing/deploy.sh` را بزنید.
 
 ## پشتیبانی
 

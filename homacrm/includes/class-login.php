@@ -276,7 +276,7 @@ final class Login {
 	}
 
 	/** اگر سقفِ یک‌ساعته پر شده، چند ثانیه تا آزادشدن مانده؛ وگرنه ۰. */
-	private static function limited( $key, $max ) {
+	public static function limited( $key, $max ) {
 		$r = get_transient( 'homacrm_rl_' . $key );
 		if ( ! is_array( $r ) || (int) $r['n'] < $max ) {
 			return 0;
@@ -284,7 +284,7 @@ final class Login {
 		return max( 1, (int) $r['until'] - time() );
 	}
 
-	private static function hit( $key ) {
+	public static function hit( $key ) {
 		$k = 'homacrm_rl_' . $key;
 		$r = get_transient( $k );
 		if ( ! is_array( $r ) ) {
@@ -294,7 +294,7 @@ final class Login {
 		set_transient( $k, $r, max( 1, (int) $r['until'] - time() ) );
 	}
 
-	private static function ip() {
+	public static function ip() {
 		return isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
 	}
 }

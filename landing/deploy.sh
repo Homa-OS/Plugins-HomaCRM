@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
-# انتشارِ لندینگِ plugin.homacrm.com: نسخهٔ افزونه = نسخهٔ زندهٔ هما، zip نسخه‌دار، سپس آپلود.
-# استفاده: landing/deploy.sh [نسخه]   (بی آرگومان: نسخهٔ زندهٔ https://homacrm.com/api/version)
+# انتشارِ لندینگِ plugin.homacrm.com با zipِ همان نسخه‌ای که در homacrm.php است (نسخه را عوض نمی‌کند؛
+# نسخهٔ تازه فقط با ./set-version.sh --bump و ./release.sh). استفاده: landing/deploy.sh
 set -euo pipefail
 cd "$(dirname "$0")/.."
-./set-version.sh "${1:-}" >/dev/null
 V=$(grep -m1 "define( 'HOMACRM_VERSION'" homacrm/homacrm.php | sed -E "s/.*'([0-9.]+)'.*/\1/")
 T=$(mktemp -d); trap 'rm -rf "$T"' EXIT
 rm -f "$T/x.zip"; zip -qr "$T/homacrm-$V.zip" homacrm -x "*.DS_Store"

@@ -37,7 +37,7 @@ final class Settings {
 			'woo_tpl_on-hold'     => "{name} عزیز، سفارش {order} در انتظار پرداخت است.\nلغو11",
 			'woo_tpl_cancelled'   => "{name} عزیز، سفارش {order} لغو شد.\nلغو11",
 			'woo_tpl_refunded'    => "{name} عزیز، مبلغ سفارش {order} بازگردانده شد.\nلغو11",
-			'woo_tpl_failed'      => "{name} عزیز، پرداختِ سفارش {order} ناموفق بود.\nلغو11",
+			'woo_tpl_failed'      => "{name} عزیز، پرداختِ سفارش {order} ناموفق بود.\nپرداختِ دوباره: {pay}\nلغو11",
 			'woo_admin_mobiles'   => '',
 			'woo_admin_template'  => "سفارش تازه {order} از {name} ({mobile}) — {total}",
 			'woo_sync_contact'    => 1,
@@ -76,6 +76,12 @@ final class Settings {
 			'eng_review'          => 0,
 			'eng_review_days'     => 5,
 			'eng_review_tpl'      => "{name} عزیز، از «{product}» راضی بودید؟ نظرتان به دیگران کمک می‌کند:\n{link}\nلغو11",
+			'eng_welcome'         => 0,
+			'eng_welcome_percent' => 10,
+			'eng_welcome_days'    => 14,
+			'eng_welcome_tpl'     => "{name} عزیز، ممنون از اولین خریدتان از {site}.\nهدیهٔ خریدِ بعد: کدِ {code} با {percent}٪ تخفیف، تا {days} روز.\nلغو11",
+			// پیگیریِ سفارش ([homacrm_track])
+			'track_tpl'           => "کدِ پیگیریِ سفارشِ {order} در {site}: {code}",
 			// لاگ
 			'log_days'            => 30,
 		);
@@ -122,14 +128,15 @@ final class Settings {
 	}
 
 	private static function tabs() {
+		// About اولِ ردیف و صفحهٔ پیش‌فرض است (خواستِ مالکِ محصول، ۱۴۰۵/۰۷/۲۸).
 		$tabs = array(
+			'about'      => 'About',
 			'connection' => 'Connection',
 			'login'      => 'SMS Login',
 			'woo'        => 'WooCommerce',
 			'engage'     => 'Marketing',
 			'crm'        => 'CRM & Forms',
 			'tools'      => 'Tools & Reports',
-			'about'      => 'About',
 		);
 		return $tabs;
 	}
@@ -140,7 +147,7 @@ final class Settings {
 		}
 		Telemetry::once( 'opened' );
 		$tabs = self::tabs();
-		$tab  = isset( $_GET['tab'] ) && isset( $tabs[ $_GET['tab'] ] ) ? sanitize_key( $_GET['tab'] ) : 'connection'; // phpcs:ignore WordPress.Security.NonceVerification
+		$tab  = isset( $_GET['tab'] ) && isset( $tabs[ $_GET['tab'] ] ) ? sanitize_key( $_GET['tab'] ) : 'about'; // phpcs:ignore WordPress.Security.NonceVerification
 		$s    = self::all();
 		echo '<div class="wrap homacrm" dir="rtl"><div class="homacrm-head" dir="ltr"><h1><img src="' . esc_url( HOMACRM_URL . 'assets/icon.svg' ) . '" alt="" width="28" height="28" style="vertical-align:middle"> <a href="https://homacrm.com/?utm_source=wp-plugin&amp;utm_medium=admin" target="_blank" rel="noopener" style="color:inherit;text-decoration:none">HomaCRM</a> <small style="font-size:13px;color:#8c8f94;font-weight:400">v' . esc_html( HOMACRM_VERSION ) . '</small></h1>';
 		if ( isset( $_GET['homacrm_msg'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
@@ -222,8 +229,10 @@ final class Settings {
 			$on = in_array( $st, (array) $s['woo_statuses'], true );
 			self::row( sprintf( __( 'وضعیتِ «%s»', 'homacrm' ), $label ), '<label><input type="checkbox" name="woo_statuses[]" value="' . esc_attr( $st ) . '"' . checked( $on, true, false ) . '> ' . esc_html__( 'پیامک به مشتری', 'homacrm' ) . '</label><textarea name="woo_tpl_' . esc_attr( $st ) . '" rows="3" class="large-text">' . esc_textarea( $s[ 'woo_tpl_' . $st ] ) . '</textarea>' );
 		}
-		self::row( __( 'متغیرها', 'homacrm' ), '<code>{name} {order} {total} {status} {site} {mobile} {tracking}</code>' );
-		self::row( __( 'موبایلِ مدیران', 'homacrm' ), '<input type="text" name="woo_admin_mobiles" value="' . esc_attr( $s['woo_admin_mobiles'] ) . '" class="regular-text" dir="ltr"><p class="description">' . esc_html__( 'با ویرگول جدا کنید؛ برای هر سفارشِ تازه پیامک می‌گیرند.', 'homacrm' ) . '</p>' );
+		self::row( __( 'متغیرها', 'homacrm' ), '<code>{name} {order} {total} {status} {site} {mobile} {tracking} {pay}</code><p class="description">' . esc_html__( '{pay} لینکِ پرداختِ دوبارهٔ همان سفارش است (برای «ناموفق»).', 'homacrm' ) . '</p>' );
+		$adm  = Util::mobiles( $s['woo_admin_mobiles'] );
+		$warn = $adm['invalid'] ? '<p class="homacrm-bad">' . esc_html( sprintf( __( 'این شماره‌ها معتبر نیستند و پیامک نمی‌گیرند: %s', 'homacrm' ), implode( '، ', $adm['invalid'] ) ) ) . '</p>' : '';
+		self::row( __( 'موبایلِ مدیران', 'homacrm' ), '<input type="text" name="woo_admin_mobiles" value="' . esc_attr( $s['woo_admin_mobiles'] ) . '" class="regular-text" dir="ltr"><p class="description">' . esc_html__( 'چند شماره را با ویرگول، «،»، فاصله یا خطِ تازه جدا کنید؛ برای هر سفارشِ تازه (از سایت یا ثبتِ دستی در پیشخوان) پیامک می‌گیرند.', 'homacrm' ) . '</p>' . $warn );
 		self::row( __( 'متنِ پیامکِ مدیر', 'homacrm' ), '<textarea name="woo_admin_template" rows="2" class="large-text">' . esc_textarea( $s['woo_admin_template'] ) . '</textarea>' );
 		self::checkbox( 'woo_sync_contact', $s, __( 'خریدار در CRMِ هما «مخاطب» شود', 'homacrm' ) );
 		self::row( __( 'ثبتِ سفارش به‌عنوانِ معامله', 'homacrm' ), '<input type="number" name="woo_deal_pipeline" value="' . esc_attr( $s['woo_deal_pipeline'] ) . '" placeholder="pipelineId"> <input type="number" name="woo_deal_stage" value="' . esc_attr( $s['woo_deal_stage'] ) . '" placeholder="stageId"><p class="description">' . esc_html__( 'خالی/۰ = خاموش. شناسه‌ها را از «ابزارها» ببینید.', 'homacrm' ) . '</p>' );
@@ -254,6 +263,12 @@ final class Settings {
 		self::checkbox( 'eng_review', $s, __( 'درخواستِ نظر چند روز بعد از تکمیلِ سفارش', 'homacrm' ) );
 		self::row( __( 'چند روز بعد', 'homacrm' ), $nm( 'eng_review_days', __( 'روز', 'homacrm' ) ) );
 		self::row( __( 'متنِ درخواستِ نظر', 'homacrm' ), $ta( 'eng_review_tpl' ) . '<p class="description"><code>{name} {product} {link}</code></p>' );
+		self::checkbox( 'eng_welcome', $s, __( 'پیامکِ تشکر بعد از اولین خرید، با کدِ تخفیفِ یک‌بارمصرف برای خریدِ بعد', 'homacrm' ) );
+		self::row( __( 'تخفیفِ خریدِ دوم', 'homacrm' ), $nm( 'eng_welcome_percent', '٪ (۰ = بی کد)،' ) . ' ' . $nm( 'eng_welcome_days', __( 'روز مهلت', 'homacrm' ) ) );
+		self::row( __( 'متنِ تشکر', 'homacrm' ), $ta( 'eng_welcome_tpl' ) . '<p class="description"><code>{name} {site} {code} {percent} {days}</code></p>' );
+		echo '<tr><th colspan="2"><h2>' . esc_html__( 'پیگیریِ سفارش', 'homacrm' ) . '</h2></th></tr>';
+		self::row( __( 'کدِ کوتاه', 'homacrm' ), '<code>[homacrm_track]</code> — ' . esc_html__( 'مشتری (حتی بی حسابِ کاربری) با شمارهٔ سفارش و کدِ پیامکی، وضعیت، اقلام و کدِ رهگیریِ مرسوله را می‌بیند. آن را در یک برگه بگذارید.', 'homacrm' ) );
+		self::row( __( 'متنِ پیامکِ کد', 'homacrm' ), $ta( 'track_tpl' ) . '<p class="description"><code>{order} {site} {code}</code></p>' );
 	}
 
 	private static function tab_crm( $s ) {
@@ -287,12 +302,13 @@ final class Settings {
 			}
 			echo '</ul>';
 		}
+		Log::summary();
 		Log::render();
 	}
 
 	private static function tab_about( $s ) {
 		$l = Updater::latest();
-		self::row( __( 'آخرین نسخهٔ منتشرشده', 'homacrm' ), $l ? esc_html( $l['version'] . ' — ' . $l['date'] ) . ( version_compare( $l['version'], HOMACRM_VERSION, '>' ) ? ' <b>' . esc_html__( '(تازه‌تر از نسخهٔ شما)', 'homacrm' ) . '</b>' : ' ✓ ' . esc_html__( 'نسخهٔ شما به‌روز است', 'homacrm' ) ) : esc_html__( 'خوانده نشد', 'homacrm' ) );
+		self::row( __( 'آخرین نسخهٔ منتشرشده', 'homacrm' ), $l ? esc_html( $l['version'] . ' — ' . Util::jdate( $l['date'], false ) ) . ( version_compare( $l['version'], HOMACRM_VERSION, '>' ) ? ' <b>' . esc_html__( '(تازه‌تر از نسخهٔ شما)', 'homacrm' ) . '</b>' : ' ✓ ' . esc_html__( 'نسخهٔ شما به‌روز است', 'homacrm' ) ) : esc_html__( 'خوانده نشد', 'homacrm' ) );
 		self::checkbox( 'auto_update', $s, __( 'نسخه‌های تازه خودکار نصب شوند', 'homacrm' ) );
 		self::checkbox( 'notify_email', $s, __( 'نسخهٔ تازه به ایمیلِ مدیرِ سایت خبر داده شود', 'homacrm' ) );
 		self::checkbox( 'notify_sms', $s, __( 'نسخهٔ تازه با پیامک هم خبر داده شود (از اعتبارِ همین پرتال)', 'homacrm' ) );
@@ -305,7 +321,7 @@ final class Settings {
 		$portal = (string) get_transient( 'homacrm_pay_portal' );
 		$cells  = array(
 			__( 'نسخهٔ نصب‌شده', 'homacrm' )  => 'v' . HOMACRM_VERSION,
-			__( 'تاریخِ به‌روزرسانی', 'homacrm' ) => HOMACRM_RELEASED,
+			__( 'تاریخِ به‌روزرسانی', 'homacrm' ) => Util::jdate( HOMACRM_RELEASED, false ),
 			__( 'وضعیت', 'homacrm' )          => $newer ? sprintf( __( 'نسخهٔ %s آماده است', 'homacrm' ), $l['version'] ) : __( 'به‌روز ✓', 'homacrm' ),
 			__( 'اتصال به هما', 'homacrm' )   => '' !== self::token() ? ( '' !== $portal ? sprintf( __( 'وصل · پرتال %s', 'homacrm' ), $portal ) : __( 'وصل', 'homacrm' ) ) : __( 'وصل نیست', 'homacrm' ),
 			__( 'وردپرس / PHP', 'homacrm' )   => 'WP ' . get_bloginfo( 'version' ) . ' · PHP ' . PHP_VERSION,
@@ -332,7 +348,7 @@ final class Settings {
 			'login' => array( 'otp_enabled', 'otp_on_wp_login', 'otp_on_woo', 'otp_register', 'otp_checkout_gate' ),
 			'woo'   => array( 'woo_enabled', 'woo_sync_contact', 'shop_sync', 'shop_invoice', 'shop_wh_out' ),
 			'crm'   => array( 'crm_sync_users', 'forms_enabled' ),
-			'engage' => array( 'eng_cart', 'eng_stock', 'eng_birthday', 'eng_tracking', 'eng_review' ),
+			'engage' => array( 'eng_cart', 'eng_stock', 'eng_birthday', 'eng_tracking', 'eng_review', 'eng_welcome' ),
 			'about' => array( 'auto_update', 'notify_email', 'notify_sms' ),
 		);
 		foreach ( $checkboxes[ $tab ] ?? array() as $k ) {

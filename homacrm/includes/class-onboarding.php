@@ -33,7 +33,7 @@ final class Onboarding {
 		if ( wp_doing_ajax() || is_network_admin() || isset( $_GET['activate-multi'] ) || ! current_user_can( 'manage_options' ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			return;
 		}
-		wp_safe_redirect( admin_url( 'admin.php?page=homacrm' ) );
+		wp_safe_redirect( admin_url( 'admin.php?page=homacrm&tab=connection' ) );
 		exit;
 	}
 
@@ -45,6 +45,6 @@ final class Onboarding {
 		if ( ! $screen || ! in_array( $screen->id, array( 'plugins', 'dashboard' ), true ) ) {
 			return;
 		}
-		echo '<div class="notice notice-info is-dismissible"><p><b>HomaCRM</b> — ' . esc_html__( 'برای شروع، توکنِ رایگان بگیرید و پیامک و ورود با موبایل را روشن کنید.', 'homacrm' ) . ' <a class="button button-primary" style="margin-inline-start:8px" href="' . esc_url( admin_url( 'admin.php?page=homacrm' ) ) . '">' . esc_html__( 'شروع', 'homacrm' ) . '</a></p></div>';
+		echo '<div class="notice notice-info is-dismissible"><p><b>HomaCRM</b> — ' . esc_html__( 'برای شروع، توکنِ رایگان بگیرید و پیامک و ورود با موبایل را روشن کنید.', 'homacrm' ) . ' <a class="button button-primary" style="margin-inline-start:8px" href="' . esc_url( admin_url( 'admin.php?page=homacrm&tab=connection' ) ) . '">' . esc_html__( 'شروع', 'homacrm' ) . '</a></p></div>';
 	}
 }

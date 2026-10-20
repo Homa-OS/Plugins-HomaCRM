@@ -1,7 +1,8 @@
 <?php
 /**
  * بازاریابی و نگهداشتِ مشتری با پیامکِ هما:
- * سبدِ رهاشده، «موجود شد خبرم کن»، تبریکِ تولد با کدِ تخفیف، کدِ رهگیریِ مرسوله و درخواستِ نظر.
+ * سبدِ رهاشده، «موجود شد خبرم کن»، تبریکِ تولد با کدِ تخفیف، کدِ رهگیریِ مرسوله، درخواستِ نظر
+ * و تشکرِ اولین خرید با کدِ تخفیفِ خریدِ دوم.
  *
  * @package HomaCRM
  */
@@ -40,6 +41,9 @@ final class Engage {
 		if ( Settings::get( 'eng_birthday' ) ) {
 			add_action( 'woocommerce_edit_account_form', array( __CLASS__, 'birthday_field' ) );
 			add_action( 'woocommerce_save_account_details', array( __CLASS__, 'birthday_save' ) );
+		}
+		if ( Settings::get( 'eng_welcome' ) ) {
+			add_action( 'woocommerce_order_status_completed', array( __CLASS__, 'welcome_mark' ), 30, 2 );
 		}
 		if ( Settings::get( 'eng_tracking' ) ) {
 			add_action( 'add_meta_boxes', array( __CLASS__, 'tracking_box' ) );
@@ -262,22 +266,8 @@ final class Engage {
 
 	/** تاریخِ جلالیِ امروز (ماه، روز). */
 	public static function jalali_today() {
-		$ts = current_time( 'timestamp' );
-		list( $gy, $gm, $gd ) = array_map( 'intval', explode( '-', gmdate( 'Y-m-d', $ts ) ) );
-		$g_d_m = array( 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334 );
-		$gy2   = ( $gm > 2 ) ? ( $gy + 1 ) : $gy;
-		$days  = 355666 + ( 365 * $gy ) + (int) ( ( $gy2 + 3 ) / 4 ) - (int) ( ( $gy2 + 99 ) / 100 ) + (int) ( ( $gy2 + 399 ) / 400 ) + $gd + $g_d_m[ $gm - 1 ];
-		$jy    = -1595 + ( 33 * (int) ( $days / 12053 ) );
-		$days %= 12053;
-		$jy   += 4 * (int) ( $days / 1461 );
-		$days %= 1461;
-		if ( $days > 365 ) {
-			$jy   += (int) ( ( $days - 1 ) / 365 );
-			$days  = ( $days - 1 ) % 365;
-		}
-		$jm = ( $days < 186 ) ? 1 + (int) ( $days / 31 ) : 7 + (int) ( ( $days - 186 ) / 30 );
-		$jd = 1 + ( ( $days < 186 ) ? ( $days % 31 ) : ( ( $days - 186 ) % 30 ) );
-		return array( $jy, $jm, $jd );
+		$d = current_datetime();
+		return Util::jalali( (int) $d->format( 'Y' ), (int) $d->format( 'n' ), (int) $d->format( 'j' ) );
 	}
 
 	private static function birthdays() {
@@ -293,21 +283,65 @@ final class Engage {
 			if ( '' === $m ) {
 				continue;
 			}
-			$code = '';
-			if ( $pct > 0 && class_exists( '\WC_Coupon' ) ) {
-				$code = 'BD' . strtoupper( wp_generate_password( 6, false ) );
-				$cp   = new \WC_Coupon();
-				$cp->set_code( $code );
-				$cp->set_discount_type( 'percent' );
-				$cp->set_amount( $pct );
-				$cp->set_usage_limit( 1 );
-				$cp->set_email_restrictions( $u->user_email ? array( $u->user_email ) : array() );
-				$cp->set_date_expires( time() + 7 * DAY_IN_SECONDS );
-				$cp->set_description( 'HomaCRM birthday' );
-				$cp->save();
-			}
+			$code = self::coupon( 'BD', $pct, 7, $u->user_email, 'HomaCRM birthday' );
 			$name = trim( $u->first_name ) ? $u->first_name : __( 'دوستِ عزیز', 'homacrm' );
 			Sms::send( $m, Util::render( (string) Settings::get( 'eng_bd_tpl' ), array( 'name' => $name, 'site' => get_bloginfo( 'name' ), 'code' => $code, 'percent' => $pct ) ), 'birthday' );
+		}
+	}
+
+	/** کدِ تخفیفِ درصدیِ یک‌بارمصرف؛ ۰٪ یا نبودِ ووکامرس ⇒ رشتهٔ خالی. */
+	private static function coupon( $prefix, $pct, $days, $email, $desc ) {
+		if ( $pct <= 0 || ! class_exists( '\WC_Coupon' ) ) {
+			return '';
+		}
+		$code = $prefix . strtoupper( wp_generate_password( 6, false ) );
+		$cp   = new \WC_Coupon();
+		$cp->set_code( $code );
+		$cp->set_discount_type( 'percent' );
+		$cp->set_amount( $pct );
+		$cp->set_usage_limit( 1 );
+		$cp->set_email_restrictions( $email ? array( $email ) : array() );
+		$cp->set_date_expires( time() + max( 1, (int) $days ) * DAY_IN_SECONDS );
+		$cp->set_description( $desc );
+		$cp->save();
+		return $code;
+	}
+
+	/* ================= تشکرِ اولین خرید ================= */
+
+	/** سفارشِ تکمیل‌شده اگر اولین سفارشِ تکمیل‌شدهٔ این مشتری باشد، برای پیامکِ تشکر علامت می‌خورد (ارسال در ساعتِ مجاز). */
+	public static function welcome_mark( $order_id, $o = null ) {
+		$o = $o instanceof \WC_Order ? $o : wc_get_order( $order_id );
+		if ( ! $o || $o->get_meta( '_homacrm_welcome' ) || '' === Util::mobile( $o->get_billing_phone() ) ) {
+			return;
+		}
+		$q = array( 'status' => array( 'completed' ), 'limit' => 2, 'return' => 'ids', 'exclude' => array( $o->get_id() ) );
+		if ( $o->get_customer_id() ) {
+			$q['customer_id'] = $o->get_customer_id();
+		} elseif ( $o->get_billing_email() ) {
+			$q['billing_email'] = $o->get_billing_email();
+		} else {
+			$q['billing_phone'] = $o->get_billing_phone();
+		}
+		$o->update_meta_data( '_homacrm_welcome', wc_get_orders( $q ) ? 'repeat' : 'due' );
+		$o->save();
+	}
+
+	private static function welcomes() {
+		$ids  = wc_get_orders( array( 'limit' => 50, 'return' => 'ids', 'meta_key' => '_homacrm_welcome', 'meta_value' => 'due' ) ); // phpcs:ignore WordPress.DB.SlowDBQuery
+		$pct  = max( 0, min( 90, (int) Settings::get( 'eng_welcome_percent' ) ) );
+		$days = max( 1, (int) Settings::get( 'eng_welcome_days' ) );
+		foreach ( $ids as $id ) {
+			$o = wc_get_order( $id );
+			$o->update_meta_data( '_homacrm_welcome', 'sent' );
+			$o->save();
+			$code = self::coupon( 'TY', $pct, $days, $o->get_billing_email(), 'HomaCRM first purchase' );
+			$tpl  = (string) Settings::get( 'eng_welcome_tpl' );
+			if ( '' === $code ) { // بی کدِ تخفیف، خطِ کد از متن حذف می‌شود.
+				$tpl = implode( "\n", array_filter( explode( "\n", $tpl ), static function ( $l ) { return false === strpos( $l, '{code}' ); } ) );
+			}
+			$res  = Sms::send( $o->get_billing_phone(), Util::render( $tpl, array( 'name' => $o->get_billing_first_name(), 'site' => get_bloginfo( 'name' ), 'code' => $code, 'percent' => $pct, 'days' => $days ) ), 'welcome' );
+			$o->add_order_note( $res['ok'] ? __( 'هما: پیامکِ تشکرِ اولین خرید فرستاده شد.', 'homacrm' ) . ( $code ? ' ' . $code : '' ) : __( 'هما: پیامکِ تشکر نرفت — ', 'homacrm' ) . $res['error'] );
 		}
 	}
 
@@ -390,6 +424,9 @@ final class Engage {
 		}
 		if ( Settings::get( 'eng_review' ) ) {
 			self::review_requests();
+		}
+		if ( Settings::get( 'eng_welcome' ) ) {
+			self::welcomes();
 		}
 	}
 }

@@ -44,6 +44,7 @@ final class Plugin {
 		}
 		if ( class_exists( 'WooCommerce' ) ) {
 			Engage::init();
+			Track::init();
 		}
 		if ( class_exists( 'WooCommerce' ) && Settings::get( 'shop_invoice' ) ) {
 			require_once HOMACRM_DIR . 'includes/class-gateway.php';

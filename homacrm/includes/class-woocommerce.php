@@ -17,6 +17,28 @@ final class Woocommerce {
 		add_action( 'woocommerce_order_status_changed', array( __CLASS__, 'status_changed' ), 20, 4 );
 		add_action( 'woocommerce_checkout_order_processed', array( __CLASS__, 'new_order' ), 20, 1 );
 		add_action( 'woocommerce_store_api_checkout_order_processed', array( __CLASS__, 'new_order_obj' ), 20, 1 );
+		// سفارشی که مدیر در پیشخوان یا برنامه‌ای با REST می‌سازد هم «سفارشِ تازه» است.
+		add_action( 'woocommerce_process_shop_order_meta', array( __CLASS__, 'admin_order' ), 50, 1 );
+		add_action( 'woocommerce_rest_insert_shop_order_object', array( __CLASS__, 'rest_order' ), 50, 3 );
+	}
+
+	/** سفارشِ دستیِ پیشخوان: فقط سفارشِ تازه‌ساخت (نه ویرایشِ سفارش‌های قدیمی). */
+	public static function admin_order( $order_id ) {
+		$o = wc_get_order( $order_id );
+		if ( ! $o || 'admin' !== $o->get_created_via() || in_array( $o->get_status(), array( 'auto-draft', 'checkout-draft', 'draft', 'trash' ), true ) ) {
+			return;
+		}
+		$c = $o->get_date_created();
+		if ( $c && $c->getTimestamp() < time() - DAY_IN_SECONDS ) {
+			return;
+		}
+		self::new_order( $o->get_id() );
+	}
+
+	public static function rest_order( $order, $request, $creating ) {
+		if ( $creating && $order instanceof \WC_Order ) {
+			self::new_order( $order->get_id() );
+		}
 	}
 
 	private static function vars( \WC_Order $o ) {
@@ -28,6 +50,8 @@ final class Woocommerce {
 			'site'     => get_bloginfo( 'name' ),
 			'mobile'   => Util::mobile( $o->get_billing_phone() ),
 			'tracking' => (string) $o->get_meta( '_tracking_code' ),
+			// لینکِ پرداختِ دوبارهٔ همان سفارش؛ فقط وقتی سفارش هنوز پرداخت‌پذیر است (در انتظارِ پرداخت/ناموفق).
+			'pay'      => $o->needs_payment() ? $o->get_checkout_payment_url() : '',
 		);
 	}
 
@@ -67,8 +91,8 @@ final class Woocommerce {
 		$vars = self::vars( $o );
 
 		// پیامک به مدیران
-		$admins = array_filter( array_map( array( 'HomaCRM\\Util', 'mobile' ), explode( ',', (string) Settings::get( 'woo_admin_mobiles' ) ) ) );
-		foreach ( array_unique( $admins ) as $a ) {
+		$admins = Util::mobiles( Settings::get( 'woo_admin_mobiles' ) );
+		foreach ( $admins['valid'] as $a ) {
 			Sms::send( $a, Util::render( Settings::get( 'woo_admin_template' ), $vars ), 'admin' );
 		}
 

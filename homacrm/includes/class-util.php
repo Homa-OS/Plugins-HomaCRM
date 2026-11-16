@@ -99,6 +99,22 @@ final class Util {
 		return strtr( (string) $template, $pairs );
 	}
 
+	/**
+	 * خطِ آخرِ پیامکِ کد به قالبِ استانداردِ «@دامنه #کد» تا آیفون (پیشنهادِ کد روی کیبورد)
+	 * و کرومِ اندروید (WebOTP) کد را خودکار پیشنهاد بدهند و فقط روی همین سایت بنشانند.
+	 * هر خطِ «@… #…» که در قالب مانده باشد برداشته می‌شود تا همیشه یک خط و همیشه آخر باشد.
+	 */
+	public static function otp_bind( $text, $code ) {
+		$host = (string) wp_parse_url( home_url(), PHP_URL_HOST );
+		$code = preg_replace( '/\D+/', '', (string) $code );
+		if ( '' === $host || '' === $code ) {
+			return (string) $text;
+		}
+		$lines = preg_split( '/\r\n|\r|\n/', rtrim( (string) $text ) );
+		$lines = array_filter( $lines, static function ( $l ) { return ! preg_match( '/^\s*@\S+\s+#\S+\s*$/u', $l ); } );
+		return rtrim( implode( "\n", $lines ) ) . "\n\n@" . strtolower( $host ) . ' #' . $code;
+	}
+
 	/** موبایل با چهار رقمِ آخرِ پیدا، برای لاگ. */
 	public static function mask( $mobile ) {
 		$m = (string) $mobile;

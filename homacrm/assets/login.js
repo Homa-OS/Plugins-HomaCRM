@@ -56,7 +56,17 @@
       if (on) { btn.dataset.label = btn.textContent; btn.disabled = true; btn.classList.add('is-loading'); btn.innerHTML = '<span class="homacrm-spin" aria-hidden="true"></span>' + text; }
       else if (btn.dataset.label != null) { btn.classList.remove('is-loading'); btn.disabled = false; btn.textContent = btn.dataset.label; delete btn.dataset.label; }
     }
-    function showCode(m) { stepM.hidden = true; stepC.hidden = false; say(cfg.i18n.sentTo.replace('%s', fa(m)), true); code.value = ''; code.focus(); }
+    var otpAbort = null;
+    /** کرومِ اندروید: کد را از پیامکِ «@دامنه #کد» خودش می‌خواند و می‌نشاند (WebOTP). آیفون با autocomplete=one-time-code. */
+    function webOtp() {
+      if (!('OTPCredential' in window) || !navigator.credentials) return;
+      if (otpAbort) { try { otpAbort.abort(); } catch (e) {} }
+      otpAbort = new AbortController();
+      navigator.credentials.get({ otp: { transport: ['sms'] }, signal: otpAbort.signal })
+        .then(function (otp) { if (otp && otp.code && !stepC.hidden) { code.value = digits(otp.code); verify(); } })
+        .catch(function () {});
+    }
+    function showCode(m) { stepM.hidden = true; stepC.hidden = false; say(cfg.i18n.sentTo.replace('%s', fa(m)), true); code.value = ''; code.focus(); webOtp(); }
     function request() {
       if (busy) return;
       var m = normMobile(mobile.value);

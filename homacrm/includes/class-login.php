@@ -143,6 +143,7 @@ final class Login {
 		}
 		$ttl  = max( 60, min( 600, (int) Settings::get( 'otp_ttl' ) ) );
 		$text = Util::render( Settings::get( 'otp_template' ), array( 'code' => $code, 'site' => get_bloginfo( 'name' ) ) );
+		$text = Util::otp_bind( $text, $code );
 		$res  = Sms::send( $mobile, $text, 'otp' );
 		if ( ! $res['ok'] ) {
 			// ارسالِ ناموفق شمرده نمی‌شود و مهلتِ انتظار نمی‌سازد.

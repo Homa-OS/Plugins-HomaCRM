@@ -86,7 +86,7 @@ final class Track {
 		$o = self::find( $number, $mobile );
 		if ( $o ) {
 			$code = (string) random_int( 10000, 99999 );
-			$res  = Sms::send( $mobile, Util::render( (string) Settings::get( 'track_tpl' ), array( 'order' => $o->get_order_number(), 'site' => get_bloginfo( 'name' ), 'code' => $code ) ), 'track' );
+			$res  = Sms::send( $mobile, Util::otp_bind( Util::render( (string) Settings::get( 'track_tpl' ), array( 'order' => $o->get_order_number(), 'site' => get_bloginfo( 'name' ), 'code' => $code ) ), $code ), 'track' );
 			if ( $res['ok'] ) {
 				set_transient( self::key( $number, $mobile ), array( 'h' => hash_hmac( 'sha256', $o->get_id() . '|' . $code, wp_salt( 'auth' ) ), 'id' => $o->get_id(), 'tries' => 0 ), 5 * MINUTE_IN_SECONDS );
 				set_transient( 'homacrm_trk_last_' . $mobile, time(), 60 );

@@ -29,6 +29,11 @@ final class Shop {
 		} elseif ( wp_next_scheduled( self::CRON ) ) {
 			wp_clear_scheduled_hook( self::CRON );
 		}
+		if ( Settings::get( 'shop_push' ) ) {
+			// وردپرس ورودیِ کالاست: ساخت و ویرایشِ کالا همان لحظه در هما ثبت و وصل می‌شود.
+			add_action( 'woocommerce_new_product', array( __CLASS__, 'on_save' ), 20, 1 );
+			add_action( 'woocommerce_update_product', array( __CLASS__, 'on_save' ), 20, 1 );
+		}
 		if ( Settings::get( 'shop_invoice' ) ) {
 			add_action( 'woocommerce_payment_complete', array( __CLASS__, 'paid' ), 30, 1 );
 			add_action( 'woocommerce_order_status_processing', array( __CLASS__, 'paid' ), 30, 1 );
@@ -81,8 +86,20 @@ final class Shop {
 		return round( (float) $v * ( $f > 0 ? $f : 1 ) );
 	}
 
+	/** وقتی تغییر از خودِ هما می‌آید، دوباره به هما فرستاده نشود. */
+	private static $pulling = false;
+
 	/** همگام‌سازیِ دوره‌ای: قیمت و موجودی از هما به ووکامرس. */
 	public static function sync() {
+		self::$pulling = true;
+		try {
+			return self::sync_pull();
+		} finally {
+			self::$pulling = false;
+		}
+	}
+
+	private static function sync_pull() {
 		$map = self::map();
 		if ( ! $map ) {
 			return array( 'ok' => true, 'updated' => 0 );
@@ -177,13 +194,126 @@ final class Shop {
 				continue; // هما در دسترس نیست؛ فروش را نمی‌بندیم.
 			}
 			$p = wc_get_product( $pid );
-			if ( $p && self::apply_stock( $p, $q ) ) {
+			self::$pulling = true;
+			$touched       = $p && self::apply_stock( $p, $q );
+			self::$pulling = false;
+			if ( $touched ) {
 				$p->save();
 			}
 			if ( $q < (float) $item['quantity'] ) {
 				wc_add_notice( sprintf( __( 'از «%1$s» فقط %2$s عدد موجود است؛ تعداد را در سبد اصلاح کنید.', 'homacrm' ), $wc->get_name(), max( 0, (int) $q ) ), 'error' );
 			}
 		}
+	}
+
+	/* ---------- کالا از وردپرس به هما ---------- */
+
+	/** ذخیرهٔ کالا در ووکامرس ⇒ ساخت یا به‌روزرسانیِ همان کالا در هما. */
+	public static function on_save( $product_id ) {
+		if ( self::$pulling || wp_is_post_revision( $product_id ) || wp_is_post_autosave( $product_id ) ) {
+			return;
+		}
+		self::push( (int) $product_id );
+	}
+
+	/** دستهٔ هما برای کالای تازه: تنظیم، وگرنه پرتکرارترین دستهٔ کالاهای وصل‌شده. */
+	private static function default_cat() {
+		$c = (int) Settings::get( 'shop_push_cat' );
+		if ( $c > 0 ) {
+			return $c;
+		}
+		global $wpdb;
+		return (int) $wpdb->get_var( $wpdb->prepare( "SELECT meta_value FROM {$wpdb->postmeta} WHERE meta_key = %s AND meta_value <> '' GROUP BY meta_value ORDER BY COUNT(*) DESC LIMIT 1", '_homa_cat_id' ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+	}
+
+	/** کالای هما با همین کد، اگر از قبل هست. */
+	private static function find_by_code( $code ) {
+		$r = self::api( 'GET', '/warehouse/products?pageSize=20&search=' . rawurlencode( $code ) );
+		foreach ( ( $r['ok'] && is_array( $r['data'] ) ) ? $r['data'] : array() as $row ) {
+			if ( (string) ( $row['code'] ?? '' ) === (string) $code ) {
+				return $row;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * یک کالای ووکامرس را در هما بساز یا به‌روز کن و شناسه‌اش را نگه دار.
+	 * فقط کالای ساده؛ کالای چندگزینه‌ای فعلاً کنار می‌ماند. شناسهٔ هما را برمی‌گرداند (۰ = نشد).
+	 */
+	public static function push( $product_id ) {
+		$wc = wc_get_product( $product_id );
+		if ( ! $wc || $wc->is_type( 'variation' ) ) {
+			return 0;
+		}
+		$hid = (int) $wc->get_meta( self::META );
+		if ( ! $wc->is_type( 'simple' ) ) {
+			return $hid;
+		}
+		$status = $wc->get_status();
+		if ( $hid <= 0 && 'publish' !== $status ) {
+			return 0; // پیش‌نویس تا منتشر نشده به هما نمی‌رود.
+		}
+		$name  = wp_strip_all_tags( $wc->get_name() );
+		$price = (float) $wc->get_regular_price();
+		$fields = array(
+			'name'     => $name,
+			'isActive' => 'publish' === $status,
+		);
+		if ( $price > 0 ) {
+			$fields['price'] = self::to_homa( $price );
+		}
+		$sku = trim( (string) $wc->get_sku() );
+		if ( '' !== $sku ) {
+			$fields['code'] = $sku;
+		}
+		$hash = md5( wp_json_encode( $fields ) );
+		if ( $hid > 0 && $hash === (string) $wc->get_meta( '_homa_push_hash' ) ) {
+			return $hid; // چیزی که به هما مربوط است عوض نشده.
+		}
+
+		if ( $hid > 0 ) {
+			$r = self::api( 'PATCH', '/warehouse/products/' . $hid, $fields );
+			if ( ! $r['ok'] && 404 === (int) ( $r['status'] ?? 0 ) ) {
+				$hid = 0; // کالا در هما پاک شده؛ دوباره ساخته شود.
+			}
+		}
+		if ( $hid <= 0 ) {
+			$found = '' !== $sku ? self::find_by_code( $sku ) : null;
+			if ( $found ) {
+				$hid = (int) $found['id'];
+				$r   = self::api( 'PATCH', '/warehouse/products/' . $hid, $fields );
+			} else {
+				$body = $fields;
+				$cat  = self::default_cat();
+				if ( $cat > 0 ) {
+					$body['categoryId'] = $cat;
+				}
+				$desc = trim( wp_strip_all_tags( $wc->get_short_description() ) );
+				if ( '' !== $desc ) {
+					$body['description'] = mb_substr( $desc, 0, 500 );
+				}
+				$r = self::api( 'POST', '/warehouse/products', $body );
+				if ( $r['ok'] && ! empty( $r['data']['id'] ) ) {
+					$hid = (int) $r['data']['id'];
+					if ( ! empty( $r['data']['categoryId'] ) ) {
+						$wc->update_meta_data( '_homa_cat_id', (string) $r['data']['categoryId'] );
+					}
+				}
+			}
+		}
+		if ( $hid > 0 && ! empty( $r['ok'] ) ) {
+			$wc->update_meta_data( self::META, (string) $hid );
+			$wc->update_meta_data( '_homa_push_hash', $hash );
+			$wc->delete_meta_data( '_homa_push_error' );
+		} else {
+			$wc->update_meta_data( '_homa_push_error', (string) ( $r['error'] ?? __( 'هما در دسترس نبود', 'homacrm' ) ) );
+		}
+		self::$pulling = true; // ذخیرهٔ متا نباید دوباره همین تابع را صدا بزند.
+		$wc->save_meta_data();
+		self::$pulling = false;
+		Log::add( 'shop', '', $hid > 0 && ! empty( $r['ok'] ), $hid > 0 && ! empty( $r['ok'] ) ? '' : (string) ( $r['error'] ?? '' ), 'push #' . $product_id . ' → ' . $hid );
+		return ( $hid > 0 && ! empty( $r['ok'] ) ) ? $hid : 0;
 	}
 
 	/* ---------- سفارش ⇒ فاکتور ---------- */
@@ -237,6 +367,9 @@ final class Shop {
 			$pid = $it->get_product_id();
 			$hid = (int) get_post_meta( $pid, self::META, true );
 			$q   = (float) $it->get_quantity();
+			if ( $hid <= 0 && Settings::get( 'shop_push' ) ) {
+				$hid = (int) self::push( $pid ); // کالای وصل‌نشده همین حالا در هما ساخته و وصل می‌شود.
+			}
 			if ( $hid <= 0 || $q <= 0 ) {
 				$missing[] = $it->get_name();
 				continue;

@@ -46,6 +46,8 @@ final class Settings {
 			// فروشگاهِ هما (انبار و فاکتور)
 			'shop_sync'           => 0,
 			'shop_invoice'        => 0,
+			'shop_push'           => 0,
+			'shop_push_cat'       => 0,
 			'shop_wh_out'         => 1,
 			'shop_shipping_ware'  => 0,
 			'shop_bank_id'        => 0,
@@ -241,6 +243,8 @@ final class Settings {
 		self::row( __( 'ثبتِ سفارش به‌عنوانِ معامله', 'homacrm' ), '<input type="number" name="woo_deal_pipeline" value="' . esc_attr( $s['woo_deal_pipeline'] ) . '" placeholder="pipelineId"> <input type="number" name="woo_deal_stage" value="' . esc_attr( $s['woo_deal_stage'] ) . '" placeholder="stageId"><p class="description">' . esc_html__( 'خالی/۰ = خاموش. شناسه‌ها را از «ابزارها» ببینید.', 'homacrm' ) . '</p>' );
 		echo '<tr><th colspan="2"><h2>' . esc_html__( 'انبار و فاکتورِ هما', 'homacrm' ) . '</h2></th></tr>';
 		self::checkbox( 'shop_sync', $s, __( 'قیمت و موجودیِ کالاها هر ۱۵ دقیقه از انبارِ هما، و موجودیِ زنده پیش از پرداخت', 'homacrm' ) );
+		self::checkbox( 'shop_push', $s, __( 'کالا را فقط در وردپرس وارد کنید: ساخت و ویرایشِ کالا (نام، کد، قیمت، انتشار) همان لحظه در انبارِ هما ثبت و وصل می‌شود', 'homacrm' ) );
+		self::row( __( 'دستهٔ هما برای کالای تازه', 'homacrm' ), '<input type="number" name="shop_push_cat" value="' . esc_attr( $s['shop_push_cat'] ) . '"><p class="description">' . esc_html__( 'شناسهٔ دسته (انبار) در هما؛ ۰ = همان دسته‌ای که بیشترِ کالاهای وصل‌شده دارند.', 'homacrm' ) . '</p>' );
 		self::checkbox( 'shop_invoice', $s, __( 'سفارشِ پرداخت‌شده/تأییدشده ⇒ فاکتورِ فروش در هما (کسرِ انبار و سند) و ثبتِ دریافت', 'homacrm' ) );
 		self::checkbox( 'shop_wh_out', $s, __( 'با هر فاکتور، حوالهٔ خروج از انبارِ هما هم ثبت شود (کسرِ موجودی)', 'homacrm' ) );
 		self::row( __( 'توکنِ جدا برای انبار و فاکتور', 'homacrm' ), '<input type="password" name="shop_token" value="" class="regular-text" dir="ltr" autocomplete="off" placeholder="' . ( get_option( 'homacrm_shop_token' ) ? esc_attr__( '(تنظیم شده؛ برای تغییر بنویسید)', 'homacrm' ) : '' ) . '"><p class="description">' . esc_html__( 'اختیاری؛ اگر انبار و فاکتور در پرتالِ دیگری است. خالی = توکنِ اصلی.', 'homacrm' ) . '</p>' );
@@ -349,7 +353,7 @@ final class Settings {
 		$tab = sanitize_key( $in['tab'] ?? '' );
 		$checkboxes = array(
 			'login' => array( 'otp_enabled', 'otp_on_wp_login', 'otp_on_woo', 'otp_register', 'otp_checkout_gate' ),
-			'woo'   => array( 'woo_enabled', 'woo_sync_contact', 'shop_sync', 'shop_invoice', 'shop_wh_out' ),
+			'woo'   => array( 'woo_enabled', 'woo_sync_contact', 'shop_sync', 'shop_push', 'shop_invoice', 'shop_wh_out' ),
 			'crm'   => array( 'crm_sync_users', 'forms_enabled' ),
 			'engage' => array( 'eng_cart', 'eng_stock', 'eng_birthday', 'eng_tracking', 'eng_review', 'eng_welcome' ),
 			'about' => array( 'auto_update', 'notify_email', 'notify_sms' ),
